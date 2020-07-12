@@ -1,95 +1,122 @@
 <template>
-  <v-layout column justify-center align-center>
-    <v-flex xs12 sm8 md6>
-      <div class="text-center">
-        <logo />
-        <vuetify-logo />
-      </div>
-      <v-card>
-        <v-card-title class="headline">
-          Welcome to the Vuetify + Nuxt.js template
-        </v-card-title>
-        <v-card-text>
-          <p>
-            Vuetify is a progressive Material Design component framework for
-            Vue.js. It was designed to empower developers to create amazing
-            applications.
-          </p>
-          <p>
-            For more information on Vuetify, check out the
-            <a
-              href="https://vuetifyjs.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              documentation </a
-            >.
-          </p>
-          <p>
-            If you have questions, please join the official
-            <a
-              href="https://chat.vuetifyjs.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="chat"
-            >
-              discord </a
-            >.
-          </p>
-          <p>
-            Find a bug? Report it on the github
-            <a
-              href="https://github.com/vuetifyjs/vuetify/issues"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="contribute"
-            >
-              issue board </a
-            >.
-          </p>
-          <p>
-            Thank you for developing with Vuetify and I look forward to bringing
-            more exciting features in the future.
-          </p>
-          <div class="text-xs-right">
-            <em><small>&mdash; John Leider</small></em>
-          </div>
-          <hr class="my-3" />
-          <a
-            href="https://nuxtjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt Documentation
-          </a>
-          <br />
-          <a
-            href="https://github.com/nuxt/nuxt.js"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt GitHub
-          </a>
+  <v-content>
+    <v-card width="600px" class="mx-auto my-5">
+      <v-form ref="form" class="pa-5">
+        <label for="name">
+          なまえ:
+          <v-text-field v-model="name" name="name" type="text" />
+        </label>
+        <label>
+          <span>つぶやき:</span>
+          <v-text-field v-model="content" type="text" />
+        </label>
+        <v-btn color="primary" @click="add">つぶやく</v-btn>
+      </v-form>
+    </v-card>
+    <ul v-for="(post, index) in postList" :key="index" class="p-0">
+      <v-card width="600px" class="mx-auto my-3">
+        <v-card-text v-if="post.editFlag">
+          <v-text-field
+            ref="input"
+            v-model="newContent"
+            type="text"
+            @keyup.enter="update(post.id)"
+            @blur="close(post.id)"
+          />
         </v-card-text>
+        <v-card-text v-else>{{ post.content }}</v-card-text>
         <v-card-actions>
-          <v-spacer />
-          <v-btn color="primary" nuxt to="/inspire">
-            Continue
-          </v-btn>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>{{ post.name }}</v-list-item-title>
+            </v-list-item-content>
+            <v-spacer></v-spacer>
+            <v-list-item-content>
+              <v-list-item-title>{{ post.createdAt }}</v-list-item-title>
+            </v-list-item-content>
+            <v-spacer></v-spacer>
+            <v-row right>
+              <v-icon v-if="!post.liked" @click="like(post.id)">
+                mdi-heart
+              </v-icon>
+              <v-icon v-else color="red lighten-2" @click="unlike(post.id)">
+                mdi-heart
+              </v-icon>
+              <div class="mx-2"></div>
+              <v-icon @click="open(post.id, index)">mdi-pencil</v-icon>
+              <div class="mx-2"></div>
+              <v-btn class="float-right" right @click="remove(post.id)">
+                <v-icon left>mdi-delete</v-icon>
+                削除
+              </v-btn>
+            </v-row>
+          </v-list-item>
         </v-card-actions>
       </v-card>
-    </v-flex>
-  </v-layout>
+    </ul>
+  </v-content>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
-
 export default {
-  components: {
-    Logo,
-    VuetifyLogo,
+  data() {
+    return {
+      name: '',
+      content: '',
+      date: null,
+      newContent: '',
+    }
+  },
+  computed: {
+    postList() {
+      return this.$store.getters['post/postList']
+    },
+    // computedに引数は渡せないが、返り値を関数にすれば指定可能
+    editFlag() {
+      return function (postId) {
+        return this.$store.getters[('post/editFlag', postId)]
+      }
+    },
+  },
+  created() {
+    this.$store.dispatch('post/postInit')
+  },
+  methods: {
+    add() {
+      // データを渡す時はオブジェクト形式にする
+      const postData = {
+        username: this.name,
+        newContent: this.content,
+      }
+      this.$store.dispatch('post/add', postData)
+      this.name = ''
+      this.content = ''
+    },
+    open(index) {
+      // this.$store.dispatch('post/open', postId)
+      this.$nextTick(() => this.$refs.input[index].focus())
+      console.log(index)
+    },
+    close(postId) {
+      this.$store.dispatch('post/close', postId)
+    },
+    update(postId) {
+      const postData = {
+        id: postId,
+        newContent: this.newContent,
+      }
+      this.$store.dispatch('post/update', postData)
+      this.editFlag = !this.editFlag
+    },
+    remove(postId) {
+      this.$store.dispatch('post/remove', postId)
+    },
+    like(postId) {
+      this.$store.dispatch('post/like', postId)
+    },
+    unlike(postId) {
+      this.$store.dispatch('post/unlike', postId)
+    },
   },
 }
 </script>
