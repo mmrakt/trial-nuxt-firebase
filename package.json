@@ -11,7 +11,9 @@
     "lint:js": "eslint --fix --ext .js,.vue --ignore-path .gitignore .",
     "lint:style": "stylelint **/*.{vue,css} --ignore-path .gitignore",
     "lint": "npm run lint:js && npm run lint:style",
-    "test": "jest"
+    "test": "jest",
+    "prettier-watch": "onchange '**/*.{vue,css}' -- prettier --config ./.prettierrc --write {{changed}}",
+    "dev-debug": "node --inspect-brk=9229 node_modules/nuxt/bin/nuxt"
   },
   "lint-staged": {
     "*.{js,vue}": "eslint",
@@ -28,6 +30,7 @@
     "firebaseui": "^4.5.1",
     "moment": "^2.27.0",
     "nuxt": "^2.13.3",
+    "onchange": "^7.0.2",
     "vee-validate": "^3.3.7",
     "vuexfire": "^3.2.0-alpha.0"
   },
