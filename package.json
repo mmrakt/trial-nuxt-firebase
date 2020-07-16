@@ -12,7 +12,7 @@
     "lint:style": "stylelint **/*.{vue,css} --ignore-path .gitignore",
     "lint": "npm run lint:js && npm run lint:style",
     "test": "jest",
-    "prettier-watch": "onchange '**/*.{vue,css}' -- prettier --config ./.prettierrc --write {{changed}}",
+    "prettier-watch": "onchange '**/*.{vue,css,js}' -- prettier --config ./.prettierrc --write {{changed}}",
     "dev-debug": "node --inspect-brk=9229 node_modules/nuxt/bin/nuxt"
   },
   "lint-staged": {
