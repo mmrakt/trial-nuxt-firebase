@@ -7,43 +7,27 @@ export default {
     posts: [],
   },
   actions: {
-    // データバインド（同期）
     postInit: firestoreAction(({ bindFirestoreRef }) => {
       bindFirestoreRef('posts', postRef)
     }),
-    add: firestoreAction((postData) => {
+    add: firestoreAction((context, { name, content }) => {
       postRef.add({
-        name: postData.username,
-        content: postData.content,
+        name,
+        content,
         editFlag: false,
         liked: false,
         createdAt: firebase.firestore.Timestamp.now(),
       })
     }),
-    remove: firestoreAction((id) => {
+    remove: firestoreAction((context, id) => {
       postRef.doc(id).delete()
     }),
-    open: firestoreAction((postId) => {
-      postRef.doc(postId).update({
-        editFlag: true,
-      })
-    }),
-    close: firestoreAction((postId) => {
-      postRef.doc(postId).update({
-        editFlag: false,
-      })
-    }),
-    update: firestoreAction((postData) => {
-      postRef.doc(postData.id).update({
-        content: postData.newContent,
-      })
-    }),
-    like: firestoreAction((postId) => {
+    like: firestoreAction((context, postId) => {
       postRef.doc(postId).update({
         liked: true,
       })
     }),
-    unlike: firestoreAction((postId) => {
+    unlike: firestoreAction((context, postId) => {
       postRef.doc(postId).update({
         liked: false,
       })
