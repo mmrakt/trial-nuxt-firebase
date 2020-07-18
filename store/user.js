@@ -1,4 +1,5 @@
 import { firestoreAction } from 'vuexfire'
+// import Cookies from 'js-cookies'
 import { firebase, userRef } from '../plugins/firebase'
 
 export default {
@@ -7,7 +8,8 @@ export default {
     users: [],
     isLogin: false,
     data: {
-      id: '',
+      uid: '',
+      name: '',
       email: '',
       birthday: '',
     },
@@ -18,14 +20,14 @@ export default {
       state.data.name = user.displayName
       state.data.email = user.email
       state.data.uid = user.uid
-      state.data.photo = user.photoURL
+      state.data.birthday = user.birthday
     },
     deleteUser(state) {
       state.isLogin = false
       state.data.name = ''
       state.data.email = ''
       state.data.uid = ''
-      state.data.photo = ''
+      state.data.birthday = ''
     },
   },
   actions: {
@@ -46,12 +48,28 @@ export default {
         }
       })
     },
-    register: firestoreAction((userData) => {
+    signup: firestoreAction((context, { userId, email, birthday }) => {
       userRef.add({
-        id: userData.userId,
-        birthday: userData.birthday,
-        email: userData.email,
+        id: userId,
+        email,
+        birthday,
       })
+      this.set()
     }),
+  },
+  getters: {
+    uid(state) {
+      if (state.user && state.user.uid) {
+        return state.user.uid
+      } else {
+        return null
+      }
+    },
+    user(state) {
+      return state.user
+    },
+    isAuthenticated(state) {
+      return !!state.user && !!state.uid
+    },
   },
 }

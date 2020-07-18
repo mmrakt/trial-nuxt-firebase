@@ -101,10 +101,10 @@ export default {
   },
   computed: {
     isLogin() {
-      return this.$store.state.auth.isLogin
+      return this.$store.state.user.isLogin
     },
     uid() {
-      return this.$store.state.auth.data.uid
+      return this.$store.state.user.data.uid
     },
   },
   methods: {
@@ -114,7 +114,7 @@ export default {
           .auth()
           .signOut()
           .then(() => {
-            this.$store.dispatch('auth/delete')
+            this.$store.dispatch('user/delete')
             this.$router.push('/login')
           })
       })
