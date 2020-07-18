@@ -1,11 +1,11 @@
-import { firestoreAction } from 'vuexfire'
-// import Cookies from 'js-cookies'
-import { firebase, userRef } from '../plugins/firebase'
+import Cookies from 'js-cookie'
+import { firebase } from '../plugins/firebase'
 
 export default {
   namespaced: true,
   state: {
-    users: [],
+    uid: null,
+    user: null,
     isLogin: false,
     data: {
       uid: '',
@@ -16,46 +16,36 @@ export default {
   },
   mutations: {
     setUser(state, user) {
-      state.isLogin = true
-      state.data.name = user.displayName
-      state.data.email = user.email
-      state.data.uid = user.uid
-      state.data.birthday = user.birthday
+      console.log('[STORE MUTATIONS] - setUSER:', user)
+      state.user = user
     },
-    deleteUser(state) {
-      state.isLogin = false
-      state.data.name = ''
-      state.data.email = ''
-      state.data.uid = ''
-      state.data.birthday = ''
+    saveUid(state, uid) {
+      console.log('[STORE MUTATIONS] - saveUID:', uid)
+      state.uid = uid
     },
   },
   actions: {
-    init: firestoreAction(({ bindFirestoreRef }) => {
-      bindFirestoreRef('users', userRef)
-    }),
-    set(context) {
-      firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-          context.commit('setUser', user)
-        }
-      })
+    async login({ dispatch, state, context, commit }, user) {
+      const loginUser = await firebase.auth().currentUser
+      const token = await loginUser.getIdToken(true) // ②-1
+      const userInfo = {
+        name: loginUser.displayName,
+        email: loginUser.email,
+        avatar: loginUser.photoURL,
+        uid: loginUser.uid,
+      }
+      Cookies.set('access_token', token)
+      await commit('setUser', userInfo)
+      await commit('saveUid', userInfo.uid)
     },
-    delete(context) {
-      firebase.auth().onAuthStateChanged((user) => {
-        if (!user) {
-          context.commit('deleteUser')
-        }
-      })
+    async logout({ commit, dispatch }) {
+      console.log('[STORE ACTIONS] - logout')
+      await firebase.auth().signOut()
+
+      Cookies.remove('access_token')
+      commit('setUser', null)
+      commit('saveUid', null)
     },
-    signup: firestoreAction((context, { userId, email, birthday }) => {
-      userRef.add({
-        id: userId,
-        email,
-        birthday,
-      })
-      this.set()
-    }),
   },
   getters: {
     uid(state) {

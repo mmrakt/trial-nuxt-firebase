@@ -28,6 +28,8 @@
     "@nuxtjs/axios": "^5.3.6",
     "firebase": "^7.15.1",
     "firebaseui": "^4.5.1",
+    "js-cookie": "^2.2.1",
+    "jwt-decode": "^2.2.0",
     "moment": "^2.27.0",
     "nuxt": "^2.13.3",
     "onchange": "^7.0.2",
