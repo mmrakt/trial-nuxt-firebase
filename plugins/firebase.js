@@ -20,5 +20,6 @@ const db = firebase.firestore()
 const postRef = db.collection('posts')
 const statusRef = db.collection('statuses')
 const userRef = db.collection('users')
+const googleProvider = new firebase.auth.GoogleAuthProvider()
 
-export { firebase, db, postRef, statusRef, userRef }
+export { firebase, db, postRef, statusRef, userRef, googleProvider }
