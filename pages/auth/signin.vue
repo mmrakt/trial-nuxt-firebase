@@ -49,7 +49,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import { firebase, googleProvider } from '../../plugins/firebase'
+import { firebase, googleProvider } from '@/plugins/firebase'
 
 export default {
   data() {
