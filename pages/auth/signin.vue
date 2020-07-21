@@ -18,14 +18,16 @@
                     v-model="password"
                     name="password"
                     label="パスワード"
+                    :type="showPassword ? 'text' : 'password'"
                     prepend-icon="mdi-lock"
-                    append-icon="mdi-eye"
+                    :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                    @click:append="showPassword = !showPassword"
                   ></v-text-field>
                 </v-form>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" @click="submit">サインイン</v-btn>
+                <v-btn color="primary" @click="fbEmailLogin">サインイン</v-btn>
               </v-card-actions>
             </v-card>
             <template>
@@ -56,12 +58,13 @@ export default {
     return {
       email: '',
       password: '',
+      showPassword: false,
     }
   },
   middleware: ['handle-login-route'],
   methods: {
     ...mapActions('user', ['login']),
-    submit() {
+    fbEmailLogin() {
       firebase
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
@@ -75,7 +78,6 @@ export default {
           console.log(error.message)
         })
     },
-    // Googleアカウントによるログイン
     async fbGoogleLogin() {
       const { user } = await firebase.auth().signInWithPopup(googleProvider)
       await this.login(user.user)
