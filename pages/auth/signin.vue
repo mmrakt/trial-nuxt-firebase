@@ -2,22 +2,25 @@
   <v-app>
     <v-main>
       <v-container class="py-5">
+        <v-row justify="center">
+          <v-sheet class="text-h4 py-5">Sign in</v-sheet>
+        </v-row>
         <v-row align="center">
-          <v-row justify="space-around">
+          <v-row justify="center">
             <v-card width="400px">
-              <v-card-title>サインイン</v-card-title>
               <v-card-text>
                 <v-form @submit.prevent="submit">
+                  <p v-if="errMsg" style="color: red;">{{ errMsg }}</p>
                   <v-text-field
                     v-model="email"
                     name="email"
-                    label="メールアドレス"
+                    label="email"
                     prepend-icon="mdi-email"
                   ></v-text-field>
                   <v-text-field
                     v-model="password"
                     name="password"
-                    label="パスワード"
+                    label="password"
                     :type="showPassword ? 'text' : 'password'"
                     prepend-icon="mdi-lock"
                     :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -27,21 +30,48 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" @click="fbEmailLogin">サインイン</v-btn>
+                <v-btn
+                  color="primary"
+                  style="text-transform: none;"
+                  @click="fbEmailLogin"
+                >
+                  Sign in
+                </v-btn>
               </v-card-actions>
             </v-card>
-            <template>
-              <div class="text-center">
-                <v-bottom-sheet>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn v-bind="attrs" v-on="on" @click="fbGoogleLogin">
-                      <v-icon>mdi-google</v-icon>
-                      Sign in With Google
-                    </v-btn>
-                  </template>
-                </v-bottom-sheet>
-              </div>
-            </template>
+            <v-list width="350px">
+              <v-list-item>
+                <v-btn
+                  class="red lighten-2"
+                  style="color: white; text-transform: none;"
+                  width="100%"
+                  @click="fbGoogleLogin"
+                >
+                  <v-icon class="mr-3">mdi-google</v-icon>
+                  Sign In with Google
+                </v-btn>
+              </v-list-item>
+              <v-list-item>
+                <v-btn
+                  class="blue lighten-2"
+                  style="color: white; text-transform: none;"
+                  width="100%"
+                >
+                  <v-icon class="mr-3">mdi-twitter</v-icon>
+                  Sign In with Twitter
+                </v-btn>
+              </v-list-item>
+              <v-list-item>
+                <v-btn
+                  class="grey darken-2"
+                  style="color: white; text-transform: none;"
+                  width="100%"
+                >
+                  <v-icon class="mr-3">mdi-github</v-icon>
+                  Sign In with GitHub
+                </v-btn>
+              </v-list-item>
+            </v-list>
           </v-row>
         </v-row>
       </v-container>
@@ -59,6 +89,7 @@ export default {
       email: '',
       password: '',
       showPassword: false,
+      errMsg: null,
     }
   },
   middleware: ['handle-login-route'],
@@ -69,13 +100,12 @@ export default {
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
         .then((firebaseUser) => {
-          return this.login(firebaseUser.user.uid)
-        })
-        .then(() => {
+          this.login(firebaseUser.user.uid)
           this.$router.push('/protected')
         })
         .catch((error) => {
           console.log(error.message)
+          this.errMsg = error.message
         })
     },
     async fbGoogleLogin() {
