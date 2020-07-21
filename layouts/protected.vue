@@ -32,36 +32,35 @@
         </v-list>
       </v-container>
     </v-navigation-drawer>
-    <v-app-bar color="primary" dark app clipped-left>
+    <v-app-bar
+      color=""
+      dark
+      app
+      clipped-left
+      src="/christian-holzinger-CUY_YHhCFl4-unsplash.jpg"
+    >
       <!-- ハンバーガーメニュー -->
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-spacer></v-spacer>
-      <v-toolbar-title>Sample App</v-toolbar-title>
+      <v-toolbar-title>
+        <a href="/" style="text-decoration: none; color: white;">
+          Sample App
+        </a>
+      </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <v-menu offset-y>
           <template v-slot:activator="{ on }">
-            <v-btn text v-on="on">
-              <v-icon>mdi-account</v-icon>
-            </v-btn>
+            <v-icon v-on="on">
+              mdi-account
+            </v-icon>
           </template>
           <v-list>
             <v-list-item>
               <v-list-item-content>
                 <v-list-item-title>
-                  <v-btn v-if="isLogin" text @click="signout">
-                    サインアウト
-                  </v-btn>
-                  <v-btn v-else text>
-                    <nuxt-link to="/login" text-white>サインイン</nuxt-link>
-                  </v-btn>
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title>
                   <v-btn color="white">
+                    <v-icon>mdi-account</v-icon>
                     <nuxt-link :to="{ name: 'users-id', params: { id: uid } }">
                       マイページ
                     </nuxt-link>
@@ -70,21 +69,25 @@
               </v-list-item-content>
             </v-list-item>
             <v-list-item>
-              <v-list-item-content></v-list-item-content>
+              <v-list-item-content>
+                <v-list-item-title>
+                  <v-btn v-if="uid" text @click="signOut">
+                    <v-icon>mdi-logout</v-icon>
+                    サインアウト
+                  </v-btn>
+                </v-list-item-title>
+              </v-list-item-content>
             </v-list-item>
           </v-list>
         </v-menu>
       </v-toolbar-items>
     </v-app-bar>
     <nuxt />
-
-    <v-footer color="primary" dark app>Vuetify</v-footer>
+    <v-footer dark app>Vuetify</v-footer>
   </v-app>
 </template>
 
 <script>
-const firebase = require('firebase')
-
 export default {
   middleware: 'authenticated',
   data() {
@@ -100,23 +103,14 @@ export default {
     }
   },
   computed: {
-    isLogin() {
-      return this.$store.state.user.isLogin
-    },
     uid() {
-      return this.$store.state.user.data.uid
+      return this.$store.state.user.uid
     },
   },
   methods: {
-    signout() {
-      firebase.auth().onAuthStateChanged(() => {
-        firebase
-          .auth()
-          .signOut()
-          .then(() => {
-            this.$store.dispatch('user/delete')
-            this.$router.push('/login')
-          })
+    async signOut() {
+      await this.$store.dispatch('user/logout').then(() => {
+        this.$router.push('/auth/signin')
       })
     },
   },

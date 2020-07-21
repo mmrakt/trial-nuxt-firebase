@@ -32,7 +32,13 @@
         </v-list>
       </v-container>
     </v-navigation-drawer>
-    <v-app-bar color="primary" dark app clipped-left>
+    <v-app-bar
+      color="primary"
+      dark
+      app
+      clipped-left
+      src="/ibrahim-mushan-qnjKufYqIIE-unsplash.jpg"
+    >
       <!-- ハンバーガーメニュー -->
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-spacer></v-spacer>
@@ -49,28 +55,15 @@
             <v-list-item>
               <v-list-item-content>
                 <v-list-item-title>
-                  <v-btn v-if="isLogin" text @click="signout">
-                    サインアウト
-                  </v-btn>
-                  <v-btn v-else text>
-                    <nuxt-link to="/login" text-white>サインイン</nuxt-link>
-                  </v-btn>
+                  <nuxt-link
+                    to="/auth/signin"
+                    style="text-decoration: none; color: black;"
+                  >
+                    <v-icon>mdi-login</v-icon>
+                    サインイン
+                  </nuxt-link>
                 </v-list-item-title>
               </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title>
-                  <v-btn color="white">
-                    <nuxt-link :to="{ name: 'users-id', params: { id: uid } }">
-                      マイページ
-                    </nuxt-link>
-                  </v-btn>
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content></v-list-item-content>
             </v-list-item>
           </v-list>
         </v-menu>
@@ -83,8 +76,6 @@
 </template>
 
 <script>
-const firebase = require('firebase')
-
 export default {
   name: 'Default',
   data() {
@@ -105,19 +96,6 @@ export default {
     },
     uid() {
       return this.$store.state.user.data.uid
-    },
-  },
-  methods: {
-    signout() {
-      firebase.auth().onAuthStateChanged(() => {
-        firebase
-          .auth()
-          .signOut()
-          .then(() => {
-            this.$store.dispatch('user/delete')
-            this.$router.push('/login')
-          })
-      })
     },
   },
 }
