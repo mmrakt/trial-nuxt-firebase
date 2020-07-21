@@ -1,6 +1,6 @@
 <template>
   <div>
-    <ul v-for="(post, index) in postList" :key="index" class="p-0">
+    <ul v-for="(post, index) in postList" :key="index" class="pl-0">
       <v-card width="600px" class="mx-auto my-3">
         <v-card-text v-if="post.editFlag">
           <v-text-field
