@@ -52,6 +52,10 @@ export default {
     '~/plugins/firebase',
     '~/plugins/moment-filter',
     '~/plugins/vee-validate',
+    {
+      src: '~/plugins/localStorage.js',
+      mode: 'client',
+    },
   ],
   /*
    ** Auto import components
