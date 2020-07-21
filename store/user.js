@@ -16,30 +16,28 @@ export default {
   },
   mutations: {
     setUser(state, user) {
-      console.log('[STORE MUTATIONS] - setUSER:', user)
       state.user = user
     },
     saveUid(state, uid) {
-      console.log('[STORE MUTATIONS] - saveUID:', uid)
       state.uid = uid
     },
   },
   actions: {
     async login({ dispatch, state, context, commit }, user) {
       const loginUser = await firebase.auth().currentUser
-      const token = await loginUser.getIdToken(true) // ②-1
+      const token = await loginUser.getIdToken(true) // ユーザー情報や有効期限情報を含んだJWTを取得
       const userInfo = {
         name: loginUser.displayName,
         email: loginUser.email,
         avatar: loginUser.photoURL,
         uid: loginUser.uid,
       }
-      Cookies.set('access_token', token)
+      Cookies.set('access_token', token) // JWTをセット
       await commit('setUser', userInfo)
       await commit('saveUid', userInfo.uid)
     },
     async logout({ commit, dispatch }) {
-      console.log('[STORE ACTIONS] - logout')
+      console.log('logout-')
       await firebase.auth().signOut()
 
       Cookies.remove('access_token')
