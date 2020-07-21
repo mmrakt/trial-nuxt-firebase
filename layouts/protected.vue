@@ -59,10 +59,10 @@
             <v-list-item>
               <v-list-item-content>
                 <v-list-item-title>
-                  <v-btn color="white">
+                  <v-btn color="white" style="text-transform: none;">
                     <v-icon>mdi-account</v-icon>
                     <nuxt-link :to="{ name: 'users-id', params: { id: uid } }">
-                      マイページ
+                      Profile
                     </nuxt-link>
                   </v-btn>
                 </v-list-item-title>
@@ -71,9 +71,14 @@
             <v-list-item>
               <v-list-item-content>
                 <v-list-item-title>
-                  <v-btn v-if="uid" text @click="signOut">
+                  <v-btn
+                    v-if="uid"
+                    text
+                    style="text-transform: none;"
+                    @click="signOut"
+                  >
                     <v-icon>mdi-logout</v-icon>
-                    サインアウト
+                    Sign out
                   </v-btn>
                 </v-list-item-title>
               </v-list-item-content>

@@ -57,10 +57,14 @@
                 <v-list-item-title>
                   <nuxt-link
                     to="/auth/signin"
-                    style="text-decoration: none; color: black;"
+                    style="
+                      text-decoration: none;
+                      color: black;
+                      text-transform: none;
+                    "
                   >
                     <v-icon>mdi-login</v-icon>
-                    サインイン
+                    Sign in
                   </nuxt-link>
                 </v-list-item-title>
               </v-list-item-content>
