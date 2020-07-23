@@ -6,7 +6,7 @@ import {
   localize,
 } from 'vee-validate'
 import * as originalRules from 'vee-validate/dist/rules'
-import ja from 'vee-validate/dist/locale/ja.json'
+import en from 'vee-validate/dist/locale/en.json'
 
 let rule
 for (rule in originalRules) {
@@ -15,7 +15,7 @@ for (rule in originalRules) {
   })
 }
 
-localize('ja', ja)
+localize('en', en)
 
 Vue.component('ValidationProvider', ValidationProvider)
 Vue.component('ValidationObserver', ValidationObserver)
