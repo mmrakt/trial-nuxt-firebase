@@ -54,6 +54,9 @@ export default {
         return null
       }
     },
+    getLoginUser: (state) => {
+      return state.user
+    },
     getUser: (state) => (userId) => {
       return state.users.find((user) => user.userId === userId)
     },

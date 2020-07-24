@@ -39,5 +39,8 @@ export default {
     getPosts: (state) => {
       return state.posts
     },
+    getUserPost: (state) => (userId) => {
+      return state.posts.filter((post) => post.userId === userId)
+    },
   },
 }
