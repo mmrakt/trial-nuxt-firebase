@@ -1,46 +1,49 @@
 <template>
   <div>
-    <ul v-for="(post, index) in postList" :key="index" class="pl-0">
-      <v-card width="600px" class="mx-auto my-3">
-        <v-card-text v-if="post.editFlag">
-          <v-text-field
-            ref="input"
-            v-model="newContent"
-            type="text"
-            @keyup.enter="update(post.id)"
-            @blur="close(post.id)"
-          />
-        </v-card-text>
-        <v-card-text v-else>{{ post.content }}</v-card-text>
-        <v-card-actions>
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title>{{ post.name }}</v-list-item-title>
-            </v-list-item-content>
-            <v-spacer></v-spacer>
-            <v-list-item-content>
-              <v-list-item-title>{{ post.createdAt }}</v-list-item-title>
-            </v-list-item-content>
-            <v-spacer></v-spacer>
-            <v-row right>
-              <v-icon v-if="!post.liked" @click="like(post.id)">
-                mdi-heart
-              </v-icon>
-              <v-icon v-else color="red lighten-2" @click="unlike(post.id)">
-                mdi-heart
-              </v-icon>
-              <div class="mx-2"></div>
-              <v-icon @click="open(post.id, index)">mdi-pencil</v-icon>
-              <div class="mx-2"></div>
-              <v-btn class="float-right" right @click="remove(post.id)">
-                <v-icon left>mdi-delete</v-icon>
-                削除
-              </v-btn>
-            </v-row>
-          </v-list-item>
-        </v-card-actions>
-      </v-card>
-    </ul>
+    <v-card width="600px" class="mx-auto my-3">
+      <v-card-title class="blue lighten-2">Time line</v-card-title>
+      <ul v-for="(post, index) in postList" :key="index" class="pl-0">
+        <v-row no-gutters class="px-1 pt-5">
+          <v-col cols="1">
+            <v-icon size="50">mdi-account-circle</v-icon>
+          </v-col>
+          <v-col cols="11">
+            <v-card-subtitle class="py-2">
+              {{ user.name }}
+              <span class="ml-3"></span>
+              {{ post.createdAt }}
+            </v-card-subtitle>
+            <v-card-text class="py-2">
+              <strong>{{ post.title }}</strong>
+            </v-card-text>
+            <v-card-text class="py-2">{{ post.content }}</v-card-text>
+            <v-card-actions class="py-0">
+              <v-list-item>
+                <v-row>
+                  <v-spacer></v-spacer>
+                  <v-icon v-if="!post.liked" @click="like(post.id)">
+                    mdi-heart
+                  </v-icon>
+                  <v-icon v-else color="red lighten-2" @click="unlike(post.id)">
+                    mdi-heart
+                  </v-icon>
+                  <v-spacer></v-spacer>
+                  <v-icon @click="open(post.id, index)">mdi-pencil</v-icon>
+                  <v-spacer></v-spacer>
+                  <v-icon>mdi-upload</v-icon>
+                  <v-spacer></v-spacer>
+                  <v-icon left right @click="remove(post.id)">
+                    mdi-delete
+                  </v-icon>
+                  <v-spacer></v-spacer>
+                </v-row>
+              </v-list-item>
+            </v-card-actions>
+          </v-col>
+        </v-row>
+        <hr />
+      </ul>
+    </v-card>
   </div>
 </template>
 
@@ -49,6 +52,9 @@ export default {
   computed: {
     postList() {
       return this.$store.getters['post/postList']
+    },
+    user() {
+      return this.$store.getters['user/user']
     },
   },
   methods: {
