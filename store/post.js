@@ -1,5 +1,6 @@
 import { firestoreAction } from 'vuexfire'
-import { postRef, firebase } from '../plugins/firebase'
+import { firebase, postRef } from '../plugins/firebase'
+// import { moment } from '@/plugins/moment-filter'
 
 export default {
   namespaced: true,
@@ -10,13 +11,14 @@ export default {
     postInit: firestoreAction(({ bindFirestoreRef }) => {
       bindFirestoreRef('posts', postRef)
     }),
-    add: firestoreAction((context, { name, content }) => {
+    add: firestoreAction((context, { name, title, content }) => {
       postRef.add({
         name,
+        title,
         content,
         editFlag: false,
         liked: false,
-        createdAt: firebase.firestore.Timestamp.now(),
+        createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
       })
     }),
     remove: firestoreAction((context, id) => {

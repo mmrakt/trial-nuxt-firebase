@@ -10,7 +10,7 @@ export const actions = {
     const user = getUserFromCookie(req) // JWTをデコードしたトークンを取得
     if (user) {
       await dispatch('user/setUser', {
-        name: user.name,
+        name: user.displayName,
         email: user.email,
         avator: user.picture,
         uid: user.user_id,

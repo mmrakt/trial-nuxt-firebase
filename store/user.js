@@ -1,18 +1,13 @@
 import Cookies from 'js-cookie'
-import { firebase } from '../plugins/firebase'
+import { firestoreAction } from 'vuexfire'
+import { firebase, userRef } from '../plugins/firebase'
 
 export default {
   namespaced: true,
   state: {
     uid: null,
     user: null,
-    isLogin: false,
-    data: {
-      uid: '',
-      name: '',
-      email: '',
-      birthday: '',
-    },
+    users: [],
   },
   mutations: {
     setUser(state, user) {
@@ -21,9 +16,15 @@ export default {
     saveUid(state, uid) {
       state.uid = uid
     },
+    setUserName(state, loginUserName) {
+      state.loginUserName = loginUserName
+    },
   },
   actions: {
-    async login({ dispatch, state, context, commit }, user) {
+    userInit: firestoreAction(({ bindFirestoreRef }) => {
+      bindFirestoreRef('users', userRef)
+    }),
+    async login({ dispatch, state, context, commit }, uid) {
       const loginUser = await firebase.auth().currentUser
       const token = await loginUser.getIdToken(true) // ユーザー情報や有効期限情報を含んだJWTを取得
       const userInfo = {
