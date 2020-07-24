@@ -5,9 +5,9 @@
         <v-row justify="center">
           <v-sheet class="text-h4 py-5">Sign in</v-sheet>
         </v-row>
-        <v-row align="center">
-          <v-row justify="center">
-            <v-card width="400px">
+        <v-row justify="center">
+          <v-col cols="4">
+            <v-card>
               <v-card-text>
                 <v-form @submit.prevent="submit">
                   <p v-if="errMsg" style="color: red;">{{ errMsg }}</p>
@@ -39,7 +39,19 @@
                 </v-btn>
               </v-card-actions>
             </v-card>
-            <v-list width="350px">
+            <v-row justify="center" class="mt-5">
+              New to this App?
+              <nuxt-link
+                to="/auth/signup"
+                style="text-decoration: none;"
+                class="ml-1"
+              >
+                create an account
+              </nuxt-link>
+            </v-row>
+          </v-col>
+          <v-col cols="4">
+            <v-list>
               <v-list-item>
                 <v-btn
                   class="red lighten-2"
@@ -72,7 +84,7 @@
                 </v-btn>
               </v-list-item>
             </v-list>
-          </v-row>
+          </v-col>
         </v-row>
       </v-container>
     </v-main>
