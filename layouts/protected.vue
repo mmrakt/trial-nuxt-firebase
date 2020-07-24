@@ -33,7 +33,7 @@
       </v-container>
     </v-navigation-drawer>
     <v-app-bar
-      color=""
+      color
       dark
       app
       clipped-left
@@ -43,17 +43,13 @@
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-spacer></v-spacer>
       <v-toolbar-title>
-        <a href="/" style="text-decoration: none; color: white;">
-          Sample App
-        </a>
+        <a href="/" style="text-decoration: none; color: white;">Sample App</a>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <v-menu offset-y>
           <template v-slot:activator="{ on }">
-            <v-icon v-on="on">
-              mdi-account
-            </v-icon>
+            <v-icon v-on="on">mdi-account</v-icon>
           </template>
           <v-list>
             <v-list-item>
@@ -61,7 +57,10 @@
                 <v-list-item-title>
                   <v-btn color="white" style="text-transform: none;">
                     <v-icon>mdi-account</v-icon>
-                    <nuxt-link :to="{ name: 'users-id', params: { id: uid } }">
+                    <nuxt-link
+                      :to="{ name: 'users-id', params: { id: uid } }"
+                      style="text-decoration: none; color: black;"
+                    >
                       Profile
                     </nuxt-link>
                   </v-btn>
@@ -94,6 +93,7 @@
 
 <script>
 export default {
+  name: 'Protected',
   middleware: 'authenticated',
   data() {
     return {
