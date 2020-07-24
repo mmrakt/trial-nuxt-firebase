@@ -47,15 +47,18 @@ export default {
     },
   },
   getters: {
-    uid(state) {
+    getUid(state) {
       if (state.user && state.user.uid) {
         return state.user.uid
       } else {
         return null
       }
     },
-    user(state) {
-      return state.user
+    getUser: (state) => (userId) => {
+      return state.users.find((user) => user.userId === userId)
+    },
+    getUsers: (state) => {
+      return state.users
     },
     isAuthenticated(state) {
       return !!state.user && !!state.uid

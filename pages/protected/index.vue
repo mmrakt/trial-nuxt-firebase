@@ -17,6 +17,7 @@ export default {
   },
   created() {
     this.$store.dispatch('post/postInit')
+    this.$store.dispatch('user/userInit')
   },
 }
 </script>

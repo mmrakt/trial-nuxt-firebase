@@ -2,16 +2,16 @@
   <div>
     <v-card width="600px" class="mx-auto my-3">
       <v-card-title class="blue lighten-2">Time line</v-card-title>
-      <ul v-for="(post, index) in postList" :key="index" class="pl-0">
+      <ul v-for="(post, index) in posts" :key="index" class="pl-0">
         <v-row no-gutters class="px-1 pt-5">
           <v-col cols="1">
             <v-icon size="50">mdi-account-circle</v-icon>
           </v-col>
           <v-col cols="11">
             <v-card-subtitle class="py-2">
-              {{ user.name }}
+              {{ user(post.userId) }}
               <span class="ml-3"></span>
-              {{ post.createdAt }}
+              {{ formated(post.createdAt) }}
             </v-card-subtitle>
             <v-card-text class="py-2">
               <strong>{{ post.title }}</strong>
@@ -48,13 +48,21 @@
 </template>
 
 <script>
+import { moment } from '@/plugins/moment-filter'
 export default {
   computed: {
-    postList() {
-      return this.$store.getters['post/postList']
+    posts() {
+      return this.$store.getters['post/getPosts']
     },
     user() {
-      return this.$store.getters['user/user']
+      return function (userId) {
+        return this.$store.getters['user/getUser'](userId)
+      }
+    },
+    formated() {
+      return function (createdAt) {
+        return moment(createdAt.seconds * 1000).format('YYYY-MM-DD')
+      }
     },
   },
   methods: {

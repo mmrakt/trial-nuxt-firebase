@@ -13,11 +13,7 @@
       <v-spacer></v-spacer>
       <v-icon>mdi-baby-face-outline</v-icon>
       <v-spacer></v-spacer>
-      <v-btn
-        color="primary"
-        style="text-transform: none;"
-        @click="add(user.name)"
-      >
+      <v-btn color="primary" style="text-transform: none;" @click="add()">
         Post
       </v-btn>
     </v-card-actions>
@@ -32,14 +28,14 @@ export default {
     }
   },
   computed: {
-    user() {
-      return this.$store.getters['user/user']
+    uid() {
+      return this.$store.getters['user/getUid']
     },
   },
   methods: {
-    add(name) {
+    add() {
       this.$store.dispatch('post/add', {
-        name,
+        userId: this.uid,
         title: this.title,
         content: this.content,
       })

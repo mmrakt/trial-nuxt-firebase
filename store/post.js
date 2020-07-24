@@ -11,14 +11,14 @@ export default {
     postInit: firestoreAction(({ bindFirestoreRef }) => {
       bindFirestoreRef('posts', postRef)
     }),
-    add: firestoreAction((context, { name, title, content }) => {
+    add: firestoreAction((context, { userId, title, content }) => {
       postRef.add({
-        name,
+        userId,
         title,
         content,
         editFlag: false,
         liked: false,
-        createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       })
     }),
     remove: firestoreAction((context, id) => {
@@ -36,11 +36,8 @@ export default {
     }),
   },
   getters: {
-    postList: (state) => {
+    getPosts: (state) => {
       return state.posts
-    },
-    getPost: (state) => (postId) => {
-      return state.posts.filter((post) => post.id === postId)[0]
     },
   },
 }
