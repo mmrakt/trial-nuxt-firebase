@@ -1,36 +1,49 @@
 <template>
   <v-card width="600px" class="mx-auto my-5">
-    <v-form ref="form" class="pa-5">
-      <label for="name">
-        Name:
-        <v-text-field v-model="name" name="name" type="text" />
-      </label>
-      <label>
-        <span>Message:</span>
-        <v-text-field v-model="content" type="text" />
-      </label>
-      <v-btn color="primary" style="text-transform: none;" @click="add">
+    <v-card-title class="blue lighten-2">Post form</v-card-title>
+    <v-form ref="form" class="px-5">
+      <v-text-field v-model="title" label="Title" name="title" type="text" />
+      <v-text-field v-model="content" label="Message" type="text" />
+    </v-form>
+    <v-card-actions class="pt-0 pb-5 pr-5">
+      <v-spacer></v-spacer>
+      <v-icon>mdi-image-plus</v-icon>
+      <v-spacer></v-spacer>
+      <v-icon>mdi-gif</v-icon>
+      <v-spacer></v-spacer>
+      <v-icon>mdi-baby-face-outline</v-icon>
+      <v-spacer></v-spacer>
+      <v-btn
+        color="primary"
+        style="text-transform: none;"
+        @click="add(user.name)"
+      >
         Post
       </v-btn>
-    </v-form>
+    </v-card-actions>
   </v-card>
 </template>
-
 <script>
 export default {
   data() {
     return {
-      name: '',
+      title: '',
       content: '',
     }
   },
+  computed: {
+    user() {
+      return this.$store.getters['user/user']
+    },
+  },
   methods: {
-    add() {
+    add(name) {
       this.$store.dispatch('post/add', {
-        name: this.name,
+        name,
+        title: this.title,
         content: this.content,
       })
-      this.name = ''
+      this.title = ''
       this.content = ''
     },
   },
