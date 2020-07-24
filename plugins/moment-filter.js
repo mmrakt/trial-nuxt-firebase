@@ -1,11 +1,6 @@
 import Vue from 'vue'
 import moment from 'moment'
 
-// Vue.filter('dateFormat', function(value) {
-//   const date = moment(value);
-//   return date.format("YYYY/MM/DD");
-// })
-
 export const getDate = () => {
   const now = new Date()
   const year = now.getFullYear()
