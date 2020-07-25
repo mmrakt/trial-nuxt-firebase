@@ -94,13 +94,5 @@ export default {
       ],
     }
   },
-  computed: {
-    isLogin() {
-      return this.$store.state.user.isLogin
-    },
-    uid() {
-      return this.$store.state.user.data.uid
-    },
-  },
 }
 </script>

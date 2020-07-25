@@ -50,6 +50,9 @@ export default {
         bio: payload.bio,
       })
     },
+    fetchUser: (state, uid) => {
+      return userRef.doc(uid).get()
+    },
   },
   getters: {
     getUid(state) {

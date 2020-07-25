@@ -29,7 +29,7 @@ export default {
   },
   computed: {
     uid() {
-      return this.$store.getters['user/getUid']
+      return this.$store.state.user.user.uid
     },
   },
   methods: {

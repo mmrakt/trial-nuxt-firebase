@@ -43,7 +43,9 @@
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-spacer></v-spacer>
       <v-toolbar-title>
-        <a href="/" style="text-decoration: none; color: white;">Sample App</a>
+        <a href="/protected" style="text-decoration: none; color: white;">
+          Sample App
+        </a>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
@@ -58,7 +60,7 @@
                   <v-btn color="white" style="text-transform: none;">
                     <v-icon>mdi-account</v-icon>
                     <nuxt-link
-                      :to="{ name: 'users-id', params: { id: uid } }"
+                      :to="{ name: 'protected-id', params: { id: uid } }"
                       style="text-decoration: none; color: black;"
                     >
                       Profile

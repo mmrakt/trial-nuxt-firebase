@@ -49,6 +49,7 @@
 
 <script>
 import { moment } from '@/plugins/moment-filter'
+
 export default {
   computed: {
     posts() {
