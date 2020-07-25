@@ -13,9 +13,23 @@
               </v-card-text>
             </v-col>
             <v-col cols="6" justify="end">
-              <v-row><v-icon size="100">mdi-account-circle</v-icon></v-row>
               <v-row>
-                <v-btn style="text-transform: none;">Edit profile</v-btn>
+                <v-icon size="100">mdi-account-circle</v-icon>
+              </v-row>
+              <v-row>
+                <v-dialog v-model="dialog" persistant max-width="600px">
+                  <template v-slot:activator="{ on }">
+                    <v-btn style="text-transform: none;" v-on="on">
+                      Edit profile
+                    </v-btn>
+                  </template>
+                  <user-edit-modal
+                    v-if="dialog"
+                    v-model="user"
+                    @closeModal="dialog = false"
+                    @save="updateProfile"
+                  />
+                </v-dialog>
               </v-row>
             </v-col>
           </v-row>
@@ -80,13 +94,20 @@
 
 <script>
 import { moment } from '@/plugins/moment-filter'
+import userEditModal from '@/components/userEditModal.vue'
 
 export default {
   layout: 'protected',
+  components: {
+    userEditModal,
+  },
+  data() {
+    return {
+      dialog: false,
+      user: null,
+    }
+  },
   computed: {
-    user() {
-      return this.$store.getters['user/getLoginUser']
-    },
     posts() {
       return this.$store.getters['post/getUserPost'](this.user.uid)
     },
@@ -98,6 +119,22 @@ export default {
   },
   created() {
     this.$store.dispatch('post/postInit')
+    this.user = this.$store.getters['user/getLoginUser']
+  },
+  methods: {
+    remove(postId) {
+      this.$store.dispatch('post/remove', postId)
+    },
+    like(postId) {
+      this.$store.dispatch('post/like', postId)
+    },
+    unlike(postId) {
+      this.$store.dispatch('post/unlike', postId)
+    },
+    updateProfile() {
+      this.$store.dispatch('user/update', this.user)
+      this.dialog = false
+    },
   },
 }
 </script>

@@ -24,7 +24,7 @@ export default {
     userInit: firestoreAction(({ bindFirestoreRef }) => {
       bindFirestoreRef('users', userRef)
     }),
-    async login({ dispatch, state, context, commit }, uid) {
+    async login({ state, context, commit }) {
       const loginUser = await firebase.auth().currentUser
       const token = await loginUser.getIdToken(true) // ユーザー情報や有効期限情報を含んだJWTを取得
       const userInfo = {
@@ -35,15 +35,20 @@ export default {
       }
       Cookies.set('access_token', token) // JWTをセット
       await commit('setUser', userInfo)
-      await commit('saveUid', userInfo.uid)
+      await commit('setUid', userInfo.uid)
     },
-    async logout({ commit, dispatch }) {
-      console.log('logout-')
+    async logout({ commit }) {
       await firebase.auth().signOut()
 
       Cookies.remove('access_token')
       commit('setUser', null)
-      commit('saveUid', null)
+      commit('setUid', null)
+    },
+    update: (state, payload) => {
+      return userRef.doc(payload.uid).update({
+        name: payload.name,
+        bio: payload.bio,
+      })
     },
   },
   getters: {
