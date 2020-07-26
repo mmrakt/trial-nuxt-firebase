@@ -13,7 +13,7 @@ export default {
     setUser(state, user) {
       state.user = user
     },
-    saveUid(state, uid) {
+    setUid(state, uid) {
       state.uid = uid
     },
     setUserName(state, loginUserName) {
@@ -26,13 +26,18 @@ export default {
     }),
     async login({ state, context, commit }) {
       const loginUser = await firebase.auth().currentUser
-      const token = await loginUser.getIdToken(true) // ユーザー情報や有効期限情報を含んだJWTを取得
+      const storeUser = state.users.find((user) => user.uid === loginUser.uid) // 追加情報を取得
+      const userBio = 'bio' in storeUser ? storeUser.bio : ''
+
       const userInfo = {
         name: loginUser.displayName,
         email: loginUser.email,
         avatar: loginUser.photoURL,
         uid: loginUser.uid,
+        bio: userBio,
       }
+      const token = await loginUser.getIdToken(true) // ユーザー情報や有効期限情報を含んだJWTを取得
+
       Cookies.set('access_token', token) // JWTをセット
       await commit('setUser', userInfo)
       await commit('setUid', userInfo.uid)
@@ -44,14 +49,9 @@ export default {
       commit('setUser', null)
       commit('setUid', null)
     },
-    update: (state, payload) => {
-      return userRef.doc(payload.uid).update({
-        name: payload.name,
-        bio: payload.bio,
-      })
-    },
-    fetchUser: (state, uid) => {
-      return userRef.doc(uid).get()
+    update({ commit }, payload) {
+      commit('setUser', payload)
+      userRef.doc(payload.uid).set(payload)
     },
   },
   getters: {
@@ -65,8 +65,8 @@ export default {
     getLoginUser: (state) => {
       return state.user
     },
-    getUser: (state) => (userId) => {
-      return state.users.find((user) => user.userId === userId)
+    getUser: (state) => (uid) => {
+      return state.users.find((user) => user.uid === uid)
     },
     getUsers: (state) => {
       return state.users

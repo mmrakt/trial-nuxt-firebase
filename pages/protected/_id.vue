@@ -7,9 +7,7 @@
             <v-col cols="6">
               <v-card-title>{{ user.name }}</v-card-title>
               <v-card-text>
-                profile messageprofile messageprofile messageprofile
-                messageprofile messageprofile messageprofile messageprofile
-                message
+                {{ user.bio }}
               </v-card-text>
             </v-col>
             <v-col cols="6" justify="end">
