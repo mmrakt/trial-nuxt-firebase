@@ -35,7 +35,7 @@ export default {
   methods: {
     add() {
       this.$store.dispatch('post/add', {
-        userId: this.uid,
+        uid: this.uid,
         title: this.title,
         content: this.content,
       })

@@ -11,9 +11,9 @@ export default {
     postInit: firestoreAction(({ bindFirestoreRef }) => {
       bindFirestoreRef('posts', postRef)
     }),
-    add: firestoreAction((context, { userId, title, content }) => {
+    add: firestoreAction((context, { uid, title, content }) => {
       postRef.add({
-        userId,
+        uid,
         title,
         content,
         editFlag: false,
@@ -39,8 +39,8 @@ export default {
     getPosts: (state) => {
       return state.posts
     },
-    getUserPost: (state) => (userId) => {
-      return state.posts.filter((post) => post.userId === userId)
+    getUserPost: (state) => (uid) => {
+      return state.posts.filter((post) => post.uid === uid)
     },
   },
 }

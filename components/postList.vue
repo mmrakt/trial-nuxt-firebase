@@ -9,7 +9,7 @@
           </v-col>
           <v-col cols="11">
             <v-card-subtitle class="py-2">
-              {{ user(post.userId) }}
+              {{ user(post.uid) }}
               <span class="ml-3"></span>
               {{ formated(post.createdAt) }}
             </v-card-subtitle>
@@ -56,8 +56,8 @@ export default {
       return this.$store.getters['post/getPosts']
     },
     user() {
-      return function (userId) {
-        return this.$store.getters['user/getUser'](userId)
+      return function (uid) {
+        return this.$store.getters['user/getUser'](uid)
       }
     },
     formated() {
