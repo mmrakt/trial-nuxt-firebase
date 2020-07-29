@@ -12,7 +12,7 @@ export const actions = {
       await dispatch('user/setUser', {
         name: user.displayName,
         email: user.email,
-        avator: user.picture,
+        avatar: user.photoURL,
         uid: user.user_id,
       })
     }
