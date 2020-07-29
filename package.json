@@ -35,11 +35,13 @@
     "npm-check-updates": "^7.0.2",
     "nuxt": "^2.13.3",
     "onchange": "^7.0.2",
+    "uuidv4": "^6.2.0",
     "vee-validate": "^3.3.7",
     "vue-localstorage": "^0.6.2",
     "vuetify": "^2.3.4",
     "vuex-persistedstate": "^3.0.1",
-    "vuexfire": "^3.2.0-alpha.0"
+    "vuexfire": "^3.2.0-alpha.0",
+    "webpack-bundle-analyzer": "^3.8.0"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^3.0.0",
