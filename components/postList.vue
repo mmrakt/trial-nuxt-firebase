@@ -4,12 +4,21 @@
       <v-card-title class="blue lighten-2">Time line</v-card-title>
       <ul v-for="(post, index) in posts" :key="index" class="pl-0">
         <v-row no-gutters class="px-1 pt-5">
-          <v-col cols="1">
-            <v-icon size="50">mdi-account-circle</v-icon>
+          <v-col v-if="user(post.uid)" cols="1">
+            <template v-if="user(post.uid).avatar">
+              <v-avatar color="grey" size="50">
+                <img :src="user(post.uid).avatar" alt />
+              </v-avatar>
+            </template>
+            <template v-else>
+              <v-avatar size="50">
+                <img src="/avatar.png" alt />
+              </v-avatar>
+            </template>
           </v-col>
           <v-col cols="11">
-            <v-card-subtitle class="py-2">
-              {{ user(post.uid) }}
+            <v-card-subtitle v-if="user(post.uid)" class="py-2">
+              {{ user(post.uid).name }}
               <span class="ml-3"></span>
               {{ formated(post.createdAt) }}
             </v-card-subtitle>
@@ -62,7 +71,9 @@ export default {
     },
     formated() {
       return function (createdAt) {
-        return moment(createdAt.seconds * 1000).format('YYYY-MM-DD')
+        return createdAt !== null
+          ? moment(createdAt.seconds * 1000).format('YYYY-MM-DD')
+          : false
       }
     },
   },
