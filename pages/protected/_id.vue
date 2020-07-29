@@ -6,13 +6,28 @@
           <v-row class="px-auto">
             <v-col cols="6">
               <v-card-title>{{ user.name }}</v-card-title>
-              <v-card-text>
-                {{ user.bio }}
-              </v-card-text>
+              <v-card-text>{{ user.bio }}</v-card-text>
             </v-col>
             <v-col cols="6" justify="end">
               <v-row>
-                <v-icon size="100">mdi-account-circle</v-icon>
+                <template v-if="user.avatar">
+                  <v-avatar color="grey" size="100">
+                    <img :src="user.avatar" alt />
+                  </v-avatar>
+                </template>
+                <template v-else>
+                  <v-avatar size="100">
+                    <img src="/avatar.png" alt />
+                  </v-avatar>
+                </template>
+                <label>
+                  <v-icon>mdi-camera-plus</v-icon>
+                  <v-file-input
+                    style="display: none;"
+                    accept="image/*"
+                    @change="uploadAvatar"
+                  ></v-file-input>
+                </label>
               </v-row>
               <v-row>
                 <v-dialog v-model="dialog" persistant max-width="600px">
@@ -130,8 +145,11 @@ export default {
       this.$store.dispatch('post/unlike', postId)
     },
     updateProfile() {
-      this.$store.dispatch('user/update', this.user)
+      this.$store.dispatch('user/updateProfile', this.user)
       this.dialog = false
+    },
+    uploadAvatar(file) {
+      this.$store.dispatch('user/uploadAvatar', file)
     },
   },
 }

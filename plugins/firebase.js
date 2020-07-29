@@ -1,6 +1,7 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
+import 'firebase/storage'
 
 const firebaseConfig = {
   // firebase構成オブジェクト
@@ -21,5 +22,6 @@ const postRef = db.collection('posts')
 const statusRef = db.collection('statuses')
 const userRef = db.collection('users')
 const googleProvider = new firebase.auth.GoogleAuthProvider()
+const fbStorage = firebase.storage()
 
-export { firebase, db, postRef, statusRef, userRef, googleProvider }
+export { firebase, db, postRef, statusRef, userRef, googleProvider, fbStorage }

@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie'
 import { firestoreAction } from 'vuexfire'
-import { firebase, userRef } from '../plugins/firebase'
+import { firebase, fbStorage, userRef } from '../plugins/firebase'
 
 export default {
   namespaced: true,
@@ -10,14 +10,20 @@ export default {
     users: [],
   },
   mutations: {
-    setUser(state, user) {
-      state.user = user
+    setUser(state, payload) {
+      state.user = payload
     },
-    setUid(state, uid) {
-      state.uid = uid
+    setUid(state, payload) {
+      state.uid = payload
     },
-    setUserName(state, loginUserName) {
-      state.loginUserName = loginUserName
+    setUserAvatar(state, payload) {
+      state.user.avatar = payload
+    },
+    setUserBio(state, payload) {
+      state.user.bio = payload
+    },
+    setUserName(state, payload) {
+      state.user.name = payload
     },
   },
   actions: {
@@ -49,9 +55,51 @@ export default {
       commit('setUser', null)
       commit('setUid', null)
     },
-    update({ commit }, payload) {
-      commit('setUser', payload)
-      userRef.doc(payload.uid).set(payload)
+    updateProfile({ commit }, payload) {
+      firebase.auth().currentUser.updateProfile({
+        displayName: payload.name,
+      })
+      userRef.doc(payload.uid).set(
+        {
+          name: payload.name,
+          bio: payload.bio,
+        },
+        {
+          merge: true,
+        }
+      )
+      commit('setUserName', payload.name)
+      commit('setUserBio', payload.bio)
+    },
+    // cloud storageに画像を保存
+    uploadAvatar({ dispatch }, payload) {
+      fbStorage
+        .ref()
+        .child('images/' + payload.name)
+        .put(payload)
+        .then((snapshot) => {
+          snapshot.ref.getDownloadURL().then((avatar) => {
+            dispatch('updateAvatar', avatar)
+          })
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    },
+    // firestoreとvuexのavatarを更新
+    updateAvatar({ state, commit }, avatar) {
+      firebase.auth().currentUser.updateProfile({
+        photoURL: avatar,
+      })
+      userRef.doc(state.user.uid).set(
+        {
+          avatar,
+        },
+        {
+          merge: true,
+        }
+      )
+      commit('setUserAvatar', avatar)
     },
   },
   getters: {
