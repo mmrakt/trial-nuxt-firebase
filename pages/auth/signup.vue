@@ -144,8 +144,9 @@ export default {
     },
     writeUserData(uid) {
       userRef.doc(uid).set({
-        userName: this.userName,
+        name: this.userName,
         email: this.email,
+        uid,
       })
     },
   },
