@@ -60,6 +60,7 @@
 <script>
 import VueCropper from 'vue-cropperjs'
 import 'cropperjs/dist/cropper.css'
+import uuid from 'uuid'
 
 export default {
   components: {
@@ -105,7 +106,8 @@ export default {
   },
   methods: {
     setImage(file) {
-      this.filename = file.name
+      const path = require('path')
+      this.filename = uuid() + path.extname(file.name)
 
       if (typeof FileReader === 'function') {
         const reader = new FileReader()
