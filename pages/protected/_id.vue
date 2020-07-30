@@ -20,14 +20,8 @@
                     <img src="/avatar.png" alt />
                   </v-avatar>
                 </template>
-                <label>
-                  <v-icon>mdi-camera-plus</v-icon>
-                  <v-file-input
-                    style="display: none;"
-                    accept="image/*"
-                    @change="uploadAvatar"
-                  ></v-file-input>
-                </label>
+                <!-- アバター写真アップロード用 -->
+                <crop-image-modal @dispatchImage="uploadAvatar" />
               </v-row>
               <v-row>
                 <v-dialog v-model="dialog" persistant max-width="600px">
@@ -36,7 +30,7 @@
                       Edit profile
                     </v-btn>
                   </template>
-                  <user-edit-modal
+                  <edit-user-modal
                     v-if="dialog"
                     v-model="user"
                     @closeModal="dialog = false"
@@ -62,18 +56,21 @@
 </template>
 
 <script>
-import userEditModal from '@/components/userEditModal.vue'
+import editUserModal from '@/components/editUserModal.vue'
 import postList from '@/components/postList.vue'
+import cropImageModal from '@/components/cropImageModal.vue'
 
 export default {
   layout: 'protected',
   components: {
-    userEditModal,
+    editUserModal,
     postList,
+    cropImageModal,
   },
   data() {
     return {
       dialog: false,
+      avatarDialog: false,
       user: null,
     }
   },
@@ -87,6 +84,7 @@ export default {
       this.dialog = false
     },
     uploadAvatar(file) {
+      console.log('uploadAvatar-' + file.obj + '/' + file.name)
       this.$store.dispatch('user/uploadAvatar', file)
     },
   },

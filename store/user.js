@@ -76,7 +76,7 @@ export default {
       fbStorage
         .ref()
         .child('images/' + payload.name)
-        .put(payload)
+        .put(payload.file)
         .then((snapshot) => {
           snapshot.ref.getDownloadURL().then((avatar) => {
             dispatch('updateAvatar', avatar)

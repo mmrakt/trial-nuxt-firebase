@@ -37,6 +37,7 @@
     "onchange": "^7.0.2",
     "uuidv4": "^6.2.0",
     "vee-validate": "^3.3.7",
+    "vue-cropperjs": "^4.1.0",
     "vue-localstorage": "^0.6.2",
     "vuetify": "^2.3.4",
     "vuex-persistedstate": "^3.0.1",
