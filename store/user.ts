@@ -26,12 +26,13 @@ export default {
       state.user.name = payload
     },
   },
+  /* eslint-disable */
   actions: {
     userInit: firestoreAction(({ bindFirestoreRef }) => {
       bindFirestoreRef('users', userRef)
     }),
     async login({ state, context, commit }) {
-      const loginUser = await firebase.auth().currentUser
+      const loginUser = await firebase.auth().currentUser!
       const storeUser = state.users.find((user) => user.uid === loginUser.uid) // 追加情報を取得
       const userBio = 'bio' in storeUser ? storeUser.bio : ''
 
@@ -56,7 +57,7 @@ export default {
       commit('setUid', null)
     },
     updateProfile({ commit }, payload) {
-      firebase.auth().currentUser.updateProfile({
+      firebase.auth().currentUser!.updateProfile({
         displayName: payload.name,
       })
       userRef.doc(payload.uid).set(
@@ -88,7 +89,7 @@ export default {
     },
     // firestoreとvuexのavatarを更新
     updateAvatar({ state, commit }, avatar) {
-      firebase.auth().currentUser.updateProfile({
+      firebase.auth().currentUser!.updateProfile({
         photoURL: avatar,
       })
       userRef.doc(state.user.uid).set(
@@ -102,6 +103,7 @@ export default {
       commit('setUserAvatar', avatar)
     },
   },
+  /* eslint-enable */
   getters: {
     getUid(state) {
       if (state.user && state.user.uid) {

@@ -5,7 +5,7 @@
   </v-content>
 </template>
 
-<script>
+<script lang="ts">
 import postForm from '../components/postForm.vue'
 import postList from '../components/postList.vue'
 
@@ -14,7 +14,7 @@ export default {
     postForm,
     postList,
   },
-  created() {
+  created(): any {
     this.$store.dispatch('post/postInit')
     this.$store.dispatch('user/userInit')
   },

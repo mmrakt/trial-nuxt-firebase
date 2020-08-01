@@ -104,7 +104,7 @@
   </v-app>
 </template>
 
-<script>
+<script lang="ts">
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { mapActions } from 'vuex'
 // import DatePicker from '../../components/DatePicker'
@@ -132,11 +132,11 @@ export default {
         const firebaseUser = await firebase
           .auth()
           .createUserWithEmailAndPassword(this.email, this.password)
-        await firebaseUser.user.updateProfile({
+        await firebaseUser.user!.updateProfile({
           displayName: this.userName,
         })
-        await this.writeUserData(firebaseUser.user.uid)
-        await this.login(firebaseUser.user.uid)
+        await this.writeUserData(firebaseUser.user!.uid)
+        await this.login(firebaseUser.user!.uid)
         this.$router.push('/protected')
       } catch (error) {
         console.log(error.message)

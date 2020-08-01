@@ -30,7 +30,7 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   // propsはread only
   props: {
@@ -59,7 +59,7 @@ export default {
   },
   methods: {
     updateValue(diff) {
-      this.$emit('input', { ...this.value, ...diff })
+      this.$emit('input', { ...(this as any).value, ...diff })
     },
   },
 }

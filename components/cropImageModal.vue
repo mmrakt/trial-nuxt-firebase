@@ -57,10 +57,10 @@
   </v-layout>
 </template>
 
-<script>
+<script lang="ts">
 import VueCropper from 'vue-cropperjs'
 import 'cropperjs/dist/cropper.css'
-import uuid from 'uuid'
+import { v4 } from 'uuid'
 
 export default {
   components: {
@@ -107,14 +107,14 @@ export default {
   methods: {
     setImage(file) {
       const path = require('path')
-      this.filename = uuid() + path.extname(file.name)
+      this.filename = v4() + path.extname(file.name)
 
       if (typeof FileReader === 'function') {
         const reader = new FileReader()
 
         reader.onload = (event) => {
-          this.imgSrc = event.target.result
-          this.$refs.cropper.replace(event.target.result)
+          this.imgSrc = event.target!.result
+          this.$refs.cropper.replace(event.target!.result)
           this.$emit('update:dataUrl', this.imgSrc)
         }
 

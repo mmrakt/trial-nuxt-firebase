@@ -5,7 +5,7 @@
   </v-content>
 </template>
 
-<script>
+<script lang="ts">
 import postForm from '@/components/postForm.vue'
 import postList from '@/components/postList.vue'
 

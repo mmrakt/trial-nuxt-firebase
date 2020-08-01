@@ -91,7 +91,7 @@
   </v-app>
 </template>
 
-<script>
+<script lang="ts">
 import { mapActions } from 'vuex'
 import { firebase, googleProvider } from '@/plugins/firebase'
 
@@ -112,7 +112,7 @@ export default {
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
         .then((firebaseUser) => {
-          this.login(firebaseUser.user.uid)
+          this.login(firebaseUser.user!.uid)
           this.$router.push('/protected')
         })
         .catch((error) => {
@@ -122,7 +122,7 @@ export default {
     },
     async fbGoogleLogin() {
       const { user } = await firebase.auth().signInWithPopup(googleProvider)
-      await this.login(user.user)
+      await this.login((user as any).user)
       this.$router.push('/protected')
     },
     async fbGoogleLogout() {

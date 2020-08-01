@@ -55,7 +55,7 @@
   </v-app>
 </template>
 
-<script>
+<script lang="ts">
 import editUserModal from '@/components/editUserModal.vue'
 import postList from '@/components/postList.vue'
 import cropImageModal from '@/components/cropImageModal.vue'

@@ -7,6 +7,7 @@ export default {
   state: {
     posts: [],
   },
+  /* eslint-disable */
   actions: {
     postInit: firestoreAction(({ bindFirestoreRef }) => {
       bindFirestoreRef('posts', postRef)
@@ -35,6 +36,7 @@ export default {
       })
     }),
   },
+  /* eslint-enable */
   getters: {
     getPosts: (state) => {
       return state.posts

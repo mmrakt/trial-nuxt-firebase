@@ -3,7 +3,7 @@
     <div id="firebaseui-auth-container"></div>
   </div>
 </template>
-<script>
+<script lang="ts">
 export default {
   mounted() {
     const firebase = require('firebase')

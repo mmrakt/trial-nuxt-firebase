@@ -9,7 +9,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import firebaseAuth from '~/components/firebaseAuth.vue'
 
 export default {

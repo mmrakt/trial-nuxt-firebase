@@ -56,7 +56,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { moment } from '@/plugins/moment-filter'
 
 export default {

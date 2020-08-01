@@ -6,7 +6,7 @@ export const mutations = {
 }
 
 export const actions = {
-  async nuxtServerInit({ dispatch }, { req }) {
+  async nuxtServerInit({ dispatch }: { dispatch: any }, { req }: { req: any }) {
     const user = getUserFromCookie(req) // JWTをデコードしたトークンを取得
     if (user) {
       await dispatch('user/setUser', {
