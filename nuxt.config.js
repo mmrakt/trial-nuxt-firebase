@@ -52,9 +52,8 @@ export default {
     '~/plugins/firebase',
     '~/plugins/moment-filter',
     '~/plugins/vee-validate',
-    '~/plugins/uuid',
     {
-      src: '~/plugins/localStorage.js',
+      src: '~/plugins/localStorage.ts',
       mode: 'client',
     },
   ],
@@ -67,6 +66,7 @@ export default {
    ** Nuxt.js dev-modules
    */
   buildModules: [
+    '@nuxt/typescript-build',
     // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module',
     // Doc: https://github.com/nuxt-community/stylelint-module
