@@ -58,11 +58,29 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue'
 import VueCropper from 'vue-cropperjs'
 import 'cropperjs/dist/cropper.css'
 import { v4 } from 'uuid'
 
-export default {
+export type PropObjType = {
+  pk: string
+  dialogMaxWidth: string
+  dialogMaxHeight: string
+  maxWidth: string
+  maxHeight: string
+  objectUrl: string
+}
+
+interface Data {
+  imgSrc: string
+  cropImg: object
+  dialog: boolean
+  file: object
+  filename: string
+  croppedBlob: object
+}
+export default Vue.extend({
   components: {
     VueCropper,
   },
@@ -88,24 +106,23 @@ export default {
       type: Number,
       default: 1200,
     },
-    // the URL of the blob image
     objectUrl: {
       type: String,
       default: '',
     },
   },
-  data() {
+  data(): Data {
     return {
       imgSrc: '',
-      cropImg: null,
+      cropImg: {},
       dialog: false,
-      file: null,
+      file: {},
       filename: '',
-      croppedBlob: null,
+      croppedBlob: {},
     }
   },
   methods: {
-    setImage(file) {
+    setImage(file: any) {
       const path = require('path')
       this.filename = v4() + path.extname(file.name)
 
@@ -139,7 +156,7 @@ export default {
       this.dialog = false
     },
   },
-}
+})
 </script>
 
 <style lang="scss" scoped></style>

@@ -92,22 +92,29 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue'
 import { mapActions } from 'vuex'
 import { firebase, googleProvider } from '@/plugins/firebase'
 
-export default {
-  data() {
+interface Data {
+  email: string
+  password: string
+  showPassword: boolean
+  errMsg: string
+}
+export default Vue.extend({
+  data(): Data {
     return {
       email: '',
       password: '',
       showPassword: false,
-      errMsg: null,
+      errMsg: '',
     }
   },
   middleware: ['handle-login-route'],
   methods: {
     ...mapActions('user', ['login']),
-    fbEmailLogin() {
+    fbEmailLogin(): void {
       firebase
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
@@ -116,19 +123,18 @@ export default {
           this.$router.push('/protected')
         })
         .catch((error) => {
-          console.log(error.message)
           this.errMsg = error.message
         })
     },
-    async fbGoogleLogin() {
+    async fbGoogleLogin(): Promise<void> {
       const { user } = await firebase.auth().signInWithPopup(googleProvider)
       await this.login((user as any).user)
       this.$router.push('/protected')
     },
-    async fbGoogleLogout() {
+    async fbGoogleLogout(): Promise<void> {
       await this.logout()
       this.$router.push('/')
     },
   },
-}
+})
 </script>

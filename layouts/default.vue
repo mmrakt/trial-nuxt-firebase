@@ -12,7 +12,7 @@
           <!-- no-actionで下の階層の項目を中央揃えに
           :append-iconでtrueなら下の階層を表示、falseなら非表示-->
           <v-list-group
-            v-for="nav_list in nav_lists"
+            v-for="nav_list in navList"
             :key="nav_list.name"
             :prepend-icon="nav_list.icon"
             no-action
@@ -80,12 +80,18 @@
 </template>
 
 <script lang="ts">
-export default {
+import Vue from 'vue'
+
+interface Data {
+  drawer: boolean
+  navList: any[]
+}
+export default Vue.extend({
   name: 'Default',
-  data() {
+  data(): Data {
     return {
-      drawer: null,
-      nav_lists: [
+      drawer: false,
+      navList: [
         {
           name: 'Getting Started',
           icon: 'mdi-vuetify',
@@ -94,5 +100,5 @@ export default {
       ],
     }
   },
-}
+})
 </script>

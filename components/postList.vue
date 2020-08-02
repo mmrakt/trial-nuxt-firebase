@@ -57,20 +57,21 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue'
 import { moment } from '@/plugins/moment-filter'
 
-export default {
+export default Vue.extend({
   computed: {
-    posts() {
+    posts(): [] {
       return this.$store.getters['post/getPosts']
     },
     user() {
-      return function (uid) {
+      return function (uid: string): string {
         return this.$store.getters['user/getUser'](uid)
       }
     },
     formated() {
-      return function (createdAt) {
+      return function (createdAt: any): any {
         return createdAt !== null
           ? moment(createdAt.seconds * 1000).format('YYYY-MM-DD')
           : false
@@ -78,17 +79,17 @@ export default {
     },
   },
   methods: {
-    remove(postId) {
+    remove(postId: string): void {
       this.$store.dispatch('post/remove', postId)
     },
-    like(postId) {
+    like(postId: string): void {
       this.$store.dispatch('post/like', postId)
     },
-    unlike(postId) {
+    unlike(postId: string): void {
       this.$store.dispatch('post/unlike', postId)
     },
   },
-}
+})
 </script>
 
 <style lang="scss" scoped></style>

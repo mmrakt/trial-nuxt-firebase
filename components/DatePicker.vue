@@ -22,14 +22,21 @@
   </v-menu>
 </template>
 <script lang="ts">
-export default {
+import Vue from 'vue'
+
+interface Data {
+  menu: boolean
+  pickerDate: string
+}
+export default Vue.extend({
+  name: 'DatePicker',
   props: {
     value: {
       type: String,
       default: new Date().toISOString().substr(0, 10),
     },
   },
-  data() {
+  data(): Data {
     return {
       menu: false,
       pickerDate: '1990-01-01',
@@ -37,10 +44,10 @@ export default {
   },
   computed: {
     picker: {
-      get() {
+      get(): string {
         return this.value
       },
-      set(val) {
+      set(val: string): void {
         this.menu = false
         this.$emit('input', val)
       },
@@ -55,7 +62,7 @@ export default {
         })
     },
   },
-}
+})
 </script>
 
 <style lang="scss" scoped></style>

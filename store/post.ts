@@ -1,6 +1,5 @@
 import { firestoreAction } from 'vuexfire'
 import { firebase, postRef } from '../plugins/firebase'
-// import { moment } from '@/plugins/moment-filter'
 
 export default {
   namespaced: true,
@@ -38,10 +37,10 @@ export default {
   },
   /* eslint-enable */
   getters: {
-    getPosts: (state) => {
+    getPosts: (state): [] => {
       return state.posts
     },
-    getUserPost: (state) => (uid) => {
+    getUserPost: (state) => (uid): {} => {
       return state.posts.filter((post) => post.uid === uid)
     },
   },

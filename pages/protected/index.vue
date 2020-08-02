@@ -6,18 +6,19 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue'
 import postForm from '@/components/postForm.vue'
 import postList from '@/components/postList.vue'
 
-export default {
+export default Vue.extend({
   layout: 'protected',
   components: {
     postForm,
     postList,
   },
-  created() {
+  created(): void {
     this.$store.dispatch('post/postInit')
     this.$store.dispatch('user/userInit')
   },
-}
+})
 </script>

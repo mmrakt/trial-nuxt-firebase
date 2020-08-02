@@ -31,8 +31,9 @@
 </template>
 
 <script lang="ts">
-export default {
-  // propsはread only
+import Vue from 'vue'
+
+export default Vue.extend({
   props: {
     value: {
       type: Object,
@@ -41,28 +42,28 @@ export default {
   },
   computed: {
     name: {
-      get() {
+      get(): string {
         return this.value.name
       },
-      set(name) {
+      set(name: string) {
         this.updateValue({ name })
       },
     },
     bio: {
-      get() {
+      get(): string {
         return this.value.bio
       },
-      set(bio) {
+      set(bio: string) {
         this.updateValue({ bio })
       },
     },
   },
   methods: {
-    updateValue(diff) {
+    updateValue(diff: []) {
       this.$emit('input', { ...(this as any).value, ...diff })
     },
   },
-}
+})
 </script>
 
 <style lang="scss" scoped></style>

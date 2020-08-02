@@ -20,20 +20,26 @@
   </v-card>
 </template>
 <script lang="ts">
-export default {
-  data() {
+import Vue from 'vue'
+
+interface Data {
+  title: string
+  content: string
+}
+export default Vue.extend({
+  data(): Data {
     return {
       title: '',
       content: '',
     }
   },
   computed: {
-    uid() {
+    uid(): string {
       return this.$store.state.user.user.uid
     },
   },
   methods: {
-    add() {
+    add(): void {
       this.$store.dispatch('post/add', {
         uid: this.uid,
         title: this.title,
@@ -43,7 +49,7 @@ export default {
       this.content = ''
     },
   },
-}
+})
 </script>
 
 <style lang="scss" scoped></style>

@@ -105,18 +105,23 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue'
 import { ValidationProvider, ValidationObserver } from 'vee-validate'
 import { mapActions } from 'vuex'
-// import DatePicker from '../../components/DatePicker'
 import { firebase, userRef } from '../../plugins/firebase'
 
-export default {
+interface Data {
+  userName: string
+  email: string
+  password: string
+  showPassword: boolean
+}
+export default Vue.extend({
   components: {
     ValidationProvider,
     ValidationObserver,
-    // DatePicker,
   },
-  data() {
+  data(): Data {
     return {
       userName: '',
       email: '',
@@ -126,7 +131,7 @@ export default {
   },
   methods: {
     ...mapActions('user', ['login']),
-    async signUp() {
+    async signUp(): Promise<void> {
       try {
         // authentication上にアカウントを登録
         const firebaseUser = await firebase
@@ -142,7 +147,7 @@ export default {
         console.log(error.message)
       }
     },
-    writeUserData(uid) {
+    writeUserData(uid: string): void {
       userRef.doc(uid).set({
         name: this.userName,
         email: this.email,
@@ -150,5 +155,5 @@ export default {
       })
     },
   },
-}
+})
 </script>

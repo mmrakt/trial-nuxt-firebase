@@ -56,39 +56,44 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue'
 import editUserModal from '@/components/editUserModal.vue'
 import postList from '@/components/postList.vue'
 import cropImageModal from '@/components/cropImageModal.vue'
 
-export default {
+interface Data {
+  dialog: boolean
+  avatarDialog: boolean
+  user: object
+}
+export default Vue.extend({
   layout: 'protected',
   components: {
     editUserModal,
     postList,
     cropImageModal,
   },
-  data() {
+  data(): Data {
     return {
       dialog: false,
       avatarDialog: false,
-      user: null,
+      user: {},
     }
   },
-  created() {
+  created(): void {
     this.$store.dispatch('post/postInit')
     this.user = this.$store.getters['user/getLoginUser']
   },
   methods: {
-    updateProfile() {
+    updateProfile(): void {
       this.$store.dispatch('user/updateProfile', this.user)
       this.dialog = false
     },
-    uploadAvatar(file) {
-      console.log('uploadAvatar-' + file.obj + '/' + file.name)
+    uploadAvatar(file: any): void {
       this.$store.dispatch('user/uploadAvatar', file)
     },
   },
-}
+})
 </script>
 
 <style lang="scss" scoped></style>
