@@ -1,38 +1,41 @@
 import { firestoreAction } from 'vuexfire'
-import { firebase, postRef } from '../plugins/firebase'
+import { v4 } from 'uuid'
+import { firebase, postRef, likeRef } from '../plugins/firebase'
 
 export default {
   namespaced: true,
   state: {
     posts: [],
+    likes: [],
   },
   /* eslint-disable */
   actions: {
     postInit: firestoreAction(({ bindFirestoreRef }) => {
       bindFirestoreRef('posts', postRef)
     }),
+    likeInit: firestoreAction(({ bindFirestoreRef }) => {
+      bindFirestoreRef('likes', likeRef)
+    }),
     add: firestoreAction((context, { uid, title, content }) => {
       postRef.add({
         uid,
         title,
         content,
-        editFlag: false,
-        liked: false,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       })
     }),
     remove: firestoreAction((context, id) => {
       postRef.doc(id).delete()
     }),
-    like: firestoreAction((context, postId) => {
-      postRef.doc(postId).update({
-        liked: true,
+    like: firestoreAction((context, post) => {
+      const likeId = v4()
+      likeRef.doc(likeId).set({
+        uid: firebase.auth().currentUser!.uid,
+        postId: post.id,
       })
     }),
-    unlike: firestoreAction((context, postId) => {
-      postRef.doc(postId).update({
-        liked: false,
-      })
+    unlike: firestoreAction((context, post) => {
+      likeRef.doc(post.id).delete()
     }),
   },
   /* eslint-enable */
@@ -42,6 +45,11 @@ export default {
     },
     getUserPost: (state) => (uid): {} => {
       return state.posts.filter((post) => post.uid === uid)
+    },
+    getlikes: (state) => {
+      return state.likes.filter(
+        (like) => like.uid === firebase.auth().currentUser!.uid
+      )
     },
   },
 }

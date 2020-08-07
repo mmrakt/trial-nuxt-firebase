@@ -30,12 +30,13 @@
               <v-list-item>
                 <v-row>
                   <v-spacer></v-spacer>
-                  <v-icon v-if="!post.liked" @click="like(post.id)">
+                  <v-icon v-if="!isLiked(post)" @click="like(post)">
                     mdi-heart
                   </v-icon>
-                  <v-icon v-else color="red lighten-2" @click="unlike(post.id)">
+                  <v-icon v-else color="red lighten-2" @click="unlike(post)">
                     mdi-heart
                   </v-icon>
+                  {{ isLiked(post) }}
                   <v-spacer></v-spacer>
                   <v-icon @click="open(post.id, index)">mdi-pencil</v-icon>
                   <v-spacer></v-spacer>
@@ -59,15 +60,28 @@
 <script lang="ts">
 import Vue from 'vue'
 import { moment } from '@/plugins/moment-filter'
+// import { firebase, postRef } from '../plugins/firebase'
 
 export default Vue.extend({
+  data() {
+    return {
+      loginUser: this.$store.state.user.user,
+    }
+  },
   computed: {
     posts(): [] {
       return this.$store.getters['post/getPosts']
     },
     user() {
-      return function (uid: string): string {
+      return function (this: any, uid: string): any {
         return this.$store.getters['user/getUser'](uid)
+      }
+    },
+    isLiked() {
+      return function (this: any, post) {
+        return this.$store.getters['post/getlikes'].some(function (value) {
+          return post.uid === value.uid && post.id === value.postId
+        })
       }
     },
     formated() {
@@ -82,11 +96,11 @@ export default Vue.extend({
     remove(postId: string): void {
       this.$store.dispatch('post/remove', postId)
     },
-    like(postId: string): void {
-      this.$store.dispatch('post/like', postId)
+    like(post: object): void {
+      this.$store.dispatch('post/like', post)
     },
-    unlike(postId: string): void {
-      this.$store.dispatch('post/unlike', postId)
+    unlike(post: object): void {
+      this.$store.dispatch('post/unlike', post)
     },
   },
 })
