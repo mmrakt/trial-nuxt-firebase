@@ -113,13 +113,13 @@ export default Vue.extend({
   },
   middleware: ['handle-login-route'],
   methods: {
-    ...mapActions('user', ['login']),
+    ...mapActions('user', ['login', 'logout']),
     fbEmailLogin(): void {
       firebase
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
-        .then((firebaseUser) => {
-          this.login(firebaseUser.user!.uid)
+        .then(() => {
+          this.login()
           this.$router.push('/protected')
         })
         .catch((error) => {
@@ -127,8 +127,8 @@ export default Vue.extend({
         })
     },
     async fbGoogleLogin(): Promise<void> {
-      const { user } = await firebase.auth().signInWithPopup(googleProvider)
-      await this.login((user as any).user)
+      await firebase.auth().signInWithPopup(googleProvider)
+      await this.login()
       this.$router.push('/protected')
     },
     async fbGoogleLogout(): Promise<void> {
