@@ -59,7 +59,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    updateValue(diff: []) {
+    updateValue(diff: {}) {
       this.$emit('input', { ...(this as any).value, ...diff })
     },
   },

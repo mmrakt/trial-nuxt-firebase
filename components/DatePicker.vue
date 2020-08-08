@@ -57,8 +57,9 @@ export default Vue.extend({
     menu(val) {
       val &&
         setTimeout(() => {
-          this.$refs.picker.activePicker = 'YEAR'
-          this.pickerDate = null
+          const pickerRef: any = this.$refs.picker
+          pickerRef.activePicker = 'YEAR'
+          this.pickerDate = ''
         })
     },
   },

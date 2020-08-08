@@ -73,7 +73,7 @@ export type PropObjType = {
 }
 
 interface Data {
-  imgSrc: string
+  imgSrc: any
   cropImg: object
   dialog: boolean
   file: object
@@ -122,7 +122,7 @@ export default Vue.extend({
     }
   },
   methods: {
-    setImage(file: any) {
+    setImage(this: any, file: any) {
       const path = require('path')
       this.filename = v4() + path.extname(file.name)
 
@@ -141,7 +141,7 @@ export default Vue.extend({
         alert('Sorry, FileReader API not supported')
       }
     },
-    cropImage() {
+    cropImage(this: any) {
       this.$refs.cropper.getCroppedCanvas().toBlob(
         (blob) => {
           const croppedBlob = {
