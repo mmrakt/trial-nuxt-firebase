@@ -36,7 +36,7 @@
                   <v-icon v-else color="red lighten-2" @click="unlike(post)">
                     mdi-heart
                   </v-icon>
-                  {{ isLiked(post) }}
+                  {{ post.likeIds.length }}
                   <v-spacer></v-spacer>
                   <v-icon @click="open(post.id, index)">mdi-pencil</v-icon>
                   <v-spacer></v-spacer>
@@ -59,24 +59,15 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { mapActions, mapGetters } from 'vuex'
 import { moment } from '@/plugins/moment-filter'
-// import { firebase, postRef } from '../plugins/firebase'
 
 export default Vue.extend({
-  data() {
-    return {
-      loginUser: this.$store.state.user.user,
-    }
-  },
   computed: {
-    posts(): [] {
-      return this.$store.getters['post/getPosts']
-    },
-    user() {
-      return function (this: any, uid: string): any {
-        return this.$store.getters['user/getUser'](uid)
-      }
-    },
+    ...mapGetters({
+      posts: 'post/getPosts',
+      user: 'user/getUser',
+    }),
     isLiked() {
       return function (this: any, post) {
         return this.$store.getters['post/getlikes'].some(function (value) {
@@ -93,15 +84,11 @@ export default Vue.extend({
     },
   },
   methods: {
-    remove(postId: string): void {
-      this.$store.dispatch('post/remove', postId)
-    },
-    like(post: object): void {
-      this.$store.dispatch('post/like', post)
-    },
-    unlike(post: object): void {
-      this.$store.dispatch('post/unlike', post)
-    },
+    ...mapActions({
+      remove: 'post/remove',
+      like: 'post/like',
+      unlike: 'post/unlike',
+    }),
   },
 })
 </script>
