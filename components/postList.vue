@@ -80,7 +80,7 @@ export default Vue.extend({
     isLiked() {
       return function (this: any, post) {
         return this.$store.getters['post/getlikes'].some(function (value) {
-          return post.uid === value.uid && post.id === value.postId
+          return post.id === value.postId
         })
       }
     },

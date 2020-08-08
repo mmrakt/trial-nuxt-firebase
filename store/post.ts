@@ -17,7 +17,9 @@ export default {
       bindFirestoreRef('likes', likeRef)
     }),
     add: firestoreAction((context, { uid, title, content }) => {
-      postRef.add({
+      const postId = v4()
+      postRef.doc(postId).set({
+        id: postId,
         uid,
         title,
         content,
@@ -25,17 +27,34 @@ export default {
       })
     }),
     remove: firestoreAction((context, id) => {
+      likeRef
+        .where('postId', '==', id)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            doc.ref.delete()
+          })
+        })
       postRef.doc(id).delete()
     }),
     like: firestoreAction((context, post) => {
-      const likeId = v4()
-      likeRef.doc(likeId).set({
+      likeRef.doc(firebase.auth().currentUser!.uid + post.id).set({
         uid: firebase.auth().currentUser!.uid,
         postId: post.id,
       })
+      postRef.doc(post.id).update({
+        likeIds: firebase.firestore.FieldValue.arrayUnion(
+          firebase.auth().currentUser!.uid + post.id
+        ),
+      })
     }),
     unlike: firestoreAction((context, post) => {
-      likeRef.doc(post.id).delete()
+      likeRef.doc(firebase.auth().currentUser!.uid + post.id).delete()
+      postRef.doc(post.id).update({
+        likeIds: firebase.firestore.FieldValue.arrayRemove(
+          firebase.auth().currentUser!.uid + post.id
+        ),
+      })
     }),
   },
   /* eslint-enable */
