@@ -17,8 +17,9 @@ export default Vue.extend({
     postList,
   },
   created(): void {
-    this.$store.dispatch('post/postInit')
-    this.$store.dispatch('user/userInit')
+    this.$store.dispatch('post/postsBind')
+    this.$store.dispatch('user/usersBind')
+    this.$store.dispatch('post/likesBind')
   },
 })
 </script>

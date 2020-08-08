@@ -81,7 +81,7 @@ export default Vue.extend({
     }
   },
   created(): void {
-    this.$store.dispatch('post/postInit')
+    this.$store.dispatch('post/postsBind')
     this.user = this.$store.getters['user/getLoginUser']
   },
   methods: {
