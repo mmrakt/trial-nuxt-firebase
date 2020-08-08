@@ -33,15 +33,9 @@ export default Vue.extend({
       content: '',
     }
   },
-  computed: {
-    uid(): string {
-      return this.$store.state.user.user.uid
-    },
-  },
   methods: {
     add(): void {
       this.$store.dispatch('post/add', {
-        uid: this.uid,
         title: this.title,
         content: this.content,
       })
