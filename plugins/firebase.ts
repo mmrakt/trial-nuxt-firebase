@@ -18,10 +18,20 @@ if (!firebase.apps.length) {
 }
 
 const db = firebase.firestore()
-const postRef = db.collection('posts')
-const statusRef = db.collection('statuses')
+const loginUser = firebase.auth().currentUser
 const userRef = db.collection('users')
+const postRef = db.collection('posts')
+const likeRef = db.collection('likes')
 const googleProvider = new firebase.auth.GoogleAuthProvider()
 const fbStorage = firebase.storage()
 
-export { firebase, db, postRef, statusRef, userRef, googleProvider, fbStorage }
+export {
+  firebase,
+  db,
+  loginUser,
+  postRef,
+  userRef,
+  likeRef,
+  googleProvider,
+  fbStorage,
+}
