@@ -7,35 +7,31 @@ export default {
   state: {
     uid: null,
     user: null,
-    users: [],
   },
   mutations: {
-    setUser(state, payload) {
-      state.user = payload
-    },
     setUid(state, payload) {
       state.uid = payload
-    },
-    setUserAvatar(state, payload) {
-      state.user.avatar = payload
-    },
-    setUserBio(state, payload) {
-      state.user.bio = payload
-    },
-    setUserName(state, payload) {
-      state.user.name = payload
     },
   },
   /* eslint-disable */
   actions: {
-    userInit: firestoreAction(({ bindFirestoreRef }) => {
+    usersBind: firestoreAction(({ bindFirestoreRef }) => {
       bindFirestoreRef('users', userRef)
     }),
-    async login({ state, context, commit }) {
+    usersUnbind: firestoreAction(({ bindFirestoreRef }) => {
+      bindFirestoreRef('users', userRef)
+    }),
+    loginUserBind: firestoreAction(({ bindFirestoreRef }, uid) => {
+      bindFirestoreRef('user', userRef.doc(uid))
+    }),
+    loginUserUnbind: firestoreAction(({ unbindFirestoreRef }, uid) => {
+      unbindFirestoreRef('user')
+    }),
+    async login({ state, context, commit, dispatch }) {
       const loginUser = await firebase.auth().currentUser!
       const storeUser = state.users.find((user) => user.uid === loginUser.uid) // 追加情報を取得
       const userBio = 'bio' in storeUser ? storeUser.bio : ''
-
+      const token = await loginUser.getIdToken(true) // ユーザー情報や有効期限情報を含んだJWTを取得
       const userInfo = {
         name: loginUser.displayName,
         email: loginUser.email,
@@ -43,20 +39,18 @@ export default {
         uid: loginUser.uid,
         bio: userBio,
       }
-      const token = await loginUser.getIdToken(true) // ユーザー情報や有効期限情報を含んだJWTを取得
 
       Cookies.set('access_token', token) // JWTをセット
-      await commit('setUser', userInfo)
       await commit('setUid', userInfo.uid)
+      await dispatch('loginUserBind', userInfo.uid) // userをバインド
     },
-    async logout({ commit }) {
+    async logout({ commit, dispatch }) {
       await firebase.auth().signOut()
-
       Cookies.remove('access_token')
-      commit('setUser', null)
       commit('setUid', null)
+      dispatch('loginUserUnbind')
     },
-    updateProfile({ commit }, payload) {
+    updateProfile({ state, dispatch }, payload) {
       firebase.auth().currentUser!.updateProfile({
         displayName: payload.name,
       })
@@ -69,8 +63,7 @@ export default {
           merge: true,
         }
       )
-      commit('setUserName', payload.name)
-      commit('setUserBio', payload.bio)
+      dispatch('loginUserBind', state.uid)
     },
     // cloud storageに画像を保存
     uploadAvatar({ dispatch }, payload) {
@@ -88,11 +81,11 @@ export default {
         })
     },
     // firestoreとvuexのavatarを更新
-    updateAvatar({ state, commit }, avatar) {
+    updateAvatar({ state, dispatch }, avatar) {
       firebase.auth().currentUser!.updateProfile({
         photoURL: avatar,
       })
-      userRef.doc(state.user.uid).set(
+      userRef.doc(state.uid).set(
         {
           avatar,
         },
@@ -100,7 +93,7 @@ export default {
           merge: true,
         }
       )
-      commit('setUserAvatar', avatar)
+      dispatch('loginUserBind', state.uid)
     },
   },
   /* eslint-enable */
