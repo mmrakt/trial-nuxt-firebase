@@ -10,19 +10,21 @@ export default {
   },
   /* eslint-disable */
   actions: {
-    postInit: firestoreAction(({ bindFirestoreRef }) => {
+    postsBind: firestoreAction(({ bindFirestoreRef }) => {
       bindFirestoreRef('posts', postRef)
     }),
-    likeInit: firestoreAction(({ bindFirestoreRef }) => {
+    likesBind: firestoreAction(({ bindFirestoreRef }) => {
       bindFirestoreRef('likes', likeRef)
     }),
-    add: firestoreAction((context, { uid, title, content }) => {
+    add: firestoreAction((context: any, { title, content }) => {
       const postId = v4()
+      const uid = context.rootState.user.uid
       postRef.doc(postId).set({
         id: postId,
         uid,
         title,
         content,
+        likeIds: [],
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       })
     }),
@@ -37,38 +39,32 @@ export default {
         })
       postRef.doc(id).delete()
     }),
-    like: firestoreAction((context, post) => {
-      likeRef.doc(firebase.auth().currentUser!.uid + post.id).set({
-        uid: firebase.auth().currentUser!.uid,
+    like: firestoreAction((context: any, post) => {
+      const uid = context.rootState.user.uid
+      likeRef.doc(uid + post.id).set({
+        uid: uid,
         postId: post.id,
       })
       postRef.doc(post.id).update({
-        likeIds: firebase.firestore.FieldValue.arrayUnion(
-          firebase.auth().currentUser!.uid + post.id
-        ),
+        likeIds: firebase.firestore.FieldValue.arrayUnion(uid + post.id),
       })
     }),
-    unlike: firestoreAction((context, post) => {
-      likeRef.doc(firebase.auth().currentUser!.uid + post.id).delete()
+    unlike: firestoreAction((context: any, post) => {
+      const uid = context.rootState.user.uid
+      likeRef.doc(uid + post.id).delete()
       postRef.doc(post.id).update({
-        likeIds: firebase.firestore.FieldValue.arrayRemove(
-          firebase.auth().currentUser!.uid + post.id
-        ),
+        likeIds: firebase.firestore.FieldValue.arrayRemove(uid + post.id),
       })
     }),
   },
-  /* eslint-enable */
   getters: {
     getPosts: (state): [] => {
       return state.posts
     },
-    getUserPost: (state) => (uid): {} => {
-      return state.posts.filter((post) => post.uid === uid)
-    },
-    getlikes: (state) => {
-      return state.likes.filter(
-        (like) => like.uid === firebase.auth().currentUser!.uid
-      )
+    getlikes: (state, getters, rootState) => {
+      const uid = rootState.user.uid
+      return state.likes.filter((like) => like.uid === uid)
     },
   },
+  /* eslint-enable */
 }
