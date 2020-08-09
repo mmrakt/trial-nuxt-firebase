@@ -42,7 +42,12 @@
                   <v-spacer></v-spacer>
                   <v-icon>mdi-upload</v-icon>
                   <v-spacer></v-spacer>
-                  <v-icon left right @click="remove(post.id)">
+                  <v-icon
+                    v-if="post.uid == loginUser.uid"
+                    left
+                    right
+                    @click="remove(post.id)"
+                  >
                     mdi-delete
                   </v-icon>
                   <v-spacer></v-spacer>
@@ -67,6 +72,7 @@ export default Vue.extend({
     ...mapGetters({
       posts: 'post/getPosts',
       user: 'user/getUser',
+      loginUser: 'user/getLoginUser',
     }),
     isLiked() {
       return function (this: any, post) {
