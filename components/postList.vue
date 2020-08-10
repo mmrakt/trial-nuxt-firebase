@@ -81,10 +81,18 @@ import { moment } from '@/plugins/moment-filter'
 export default Vue.extend({
   computed: {
     ...mapGetters({
-      posts: 'post/getPosts',
       user: 'user/getUser',
       loginUser: 'user/getLoginUser',
     }),
+    posts(this: any) {
+      if (this.$route.params.id) {
+        return this.$store.getters['post/getLoginUserPosts'](
+          this.$route.params.id
+        )
+      } else {
+        return this.$store.getters['post/getPosts']
+      }
+    },
     isLiked() {
       return function (this: any, post) {
         return this.$store.getters['post/getlikes'].some(function (value) {

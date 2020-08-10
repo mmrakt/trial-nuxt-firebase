@@ -61,6 +61,9 @@ export default {
     getPosts: (state): [] => {
       return state.posts
     },
+    getLoginUserPosts: (state) => (uid) => {
+      return state.posts.filter((post) => post.uid == uid)
+    },
     getlikes: (state, getters, rootState) => {
       const uid = rootState.user.uid
       return state.likes.filter((like) => like.uid === uid)
