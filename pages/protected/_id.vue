@@ -21,22 +21,26 @@
                   </v-avatar>
                 </template>
                 <!-- アバター写真アップロード用 -->
-                <crop-image-modal @dispatchImage="uploadAvatar" />
+                <template v-if="isMypage">
+                  <crop-image-modal @dispatchImage="uploadAvatar" />
+                </template>
               </v-row>
               <v-row>
-                <v-dialog v-model="dialog" persistant max-width="600px">
-                  <template v-slot:activator="{ on }">
-                    <v-btn style="text-transform: none;" v-on="on">
-                      Edit profile
-                    </v-btn>
-                  </template>
-                  <edit-user-modal
-                    v-if="dialog"
-                    v-model="user"
-                    @closeModal="dialog = false"
-                    @save="updateProfile"
-                  />
-                </v-dialog>
+                <template v-if="isMypage">
+                  <v-dialog v-model="dialog" persistant max-width="600px">
+                    <template v-slot:activator="{ on }">
+                      <v-btn style="text-transform: none;" v-on="on">
+                        Edit profile
+                      </v-btn>
+                    </template>
+                    <edit-user-modal
+                      v-if="dialog"
+                      v-model="user"
+                      @closeModal="dialog = false"
+                      @save="updateProfile"
+                    />
+                  </v-dialog>
+                </template>
               </v-row>
             </v-col>
           </v-row>
@@ -79,6 +83,11 @@ export default Vue.extend({
       avatarDialog: false,
       user: {},
     }
+  },
+  computed: {
+    isMypage(): boolean {
+      return this.$route.params.id === this.$store.getters['user/getUid']
+    },
   },
   created(): void {
     this.$store.dispatch('post/postsBind')
