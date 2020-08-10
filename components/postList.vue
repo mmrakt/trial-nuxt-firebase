@@ -6,9 +6,14 @@
         <v-row no-gutters class="px-1 pt-5">
           <v-col v-if="user(post.uid)" cols="1">
             <template v-if="user(post.uid).avatar">
-              <v-avatar color="grey" size="50">
-                <img :src="user(post.uid).avatar" alt />
-              </v-avatar>
+              <nuxt-link
+                :to="{ name: 'protected-id', params: { id: post.uid } }"
+                style="text-decoration: none; color: black;"
+              >
+                <v-avatar color="grey" size="50">
+                  <img :src="user(post.uid).avatar" alt />
+                </v-avatar>
+              </nuxt-link>
             </template>
             <template v-else>
               <v-avatar size="50">
@@ -18,7 +23,13 @@
           </v-col>
           <v-col cols="11">
             <v-card-subtitle v-if="user(post.uid)" class="py-2">
-              {{ user(post.uid).name }}
+              <nuxt-link
+                :to="{ name: 'protected-id', params: { id: post.uid } }"
+                style="text-decoration: none; color: black;"
+              >
+                {{ user(post.uid).name }}
+              </nuxt-link>
+
               <span class="ml-3"></span>
               {{ formated(post.createdAt) }}
             </v-card-subtitle>

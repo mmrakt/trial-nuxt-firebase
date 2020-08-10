@@ -82,7 +82,7 @@ export default Vue.extend({
   },
   created(): void {
     this.$store.dispatch('post/postsBind')
-    this.user = this.$store.getters['user/getLoginUser']
+    this.user = this.$store.getters['user/getUser'](this.$route.params.id)
   },
   methods: {
     updateProfile(): void {
