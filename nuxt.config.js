@@ -1,4 +1,5 @@
 import colors from 'vuetify/es5/util/colors'
+const { PUBLIC_VAPID_KEY } = process.env
 
 export default {
   /*
@@ -76,7 +77,7 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: [],
+  modules: ['@nuxtjs/pwa', '@nuxtjs/dotenv', '@nuxtjs/onesignal'],
   /*
    ** vuetify module configuration
    ** https://github.com/nuxt-community/vuetify-module
@@ -115,4 +116,21 @@ export default {
     extend() {},
     transpile: ['vee-validate/dist/rules'],
   },
+  env: {
+    PUBLIC_VAPID_KEY,
+  },
+  // oneSignal: {
+  //   init: {
+  //     appId: '24ddff98-d7f5-4993-826f-9dcce061ab03',
+  //     allowLocalhostAsSecureOrigin: true,
+  //     welcomeNotification: {
+  //       disable: true,
+  //     },
+  //   },
+  // },
+  // pwa: {
+  //   workbox: {
+  //     dev: true,
+  //   },
+  // },
 }
