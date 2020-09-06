@@ -81,6 +81,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { firebase } from '@/plugins/firebase'
 
 interface Data {
   drawer: boolean
@@ -99,6 +100,23 @@ export default Vue.extend({
         },
       ],
     }
+  },
+  created() {
+    const messaging = firebase.messaging()
+    messaging
+      .requestPermission()
+      .then(() => {
+        return messaging.getToken()
+      })
+      .then((token) => {
+        console.log(token)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    messaging.onMessage((payload) => {
+      console.log('message: ', payload)
+    })
   },
 })
 </script>

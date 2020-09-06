@@ -85,7 +85,6 @@ export default Vue.extend({
     VueCropper,
   },
   props: {
-    value: {},
     pk: {
       type: String,
       default: 'image_key',

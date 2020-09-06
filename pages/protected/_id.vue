@@ -32,6 +32,7 @@
                       <v-btn style="text-transform: none;" v-on="on">
                         Edit profile
                       </v-btn>
+                      <v-btn @click="outputLog">Output log</v-btn>
                     </template>
                     <edit-user-modal
                       v-if="dialog"
@@ -64,6 +65,7 @@ import Vue from 'vue'
 import editUserModal from '@/components/editUserModal.vue'
 import postList from '@/components/postList.vue'
 import cropImageModal from '@/components/cropImageModal.vue'
+import { firebase } from '@/plugins/firebase'
 
 interface Data {
   dialog: boolean
@@ -100,6 +102,14 @@ export default Vue.extend({
     },
     uploadAvatar(file: any): void {
       this.$store.dispatch('user/uploadAvatar', file)
+    },
+    outputLog(): void {
+      firebase
+        .functions()
+        .httpsCallable('sampleOnCall')({ name: 'akito' })
+        .then((res) => {
+          console.log(res)
+        })
     },
   },
 })

@@ -49,6 +49,7 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
+        <v-icon class="mr-3">mdi-comment-alert</v-icon>
         <v-menu offset-y>
           <template v-slot:activator="{ on }">
             <v-icon v-on="on">mdi-account</v-icon>
