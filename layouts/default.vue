@@ -42,7 +42,11 @@
       <!-- ハンバーガーメニュー -->
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-spacer></v-spacer>
-      <v-toolbar-title>Sample App</v-toolbar-title>
+      <v-toolbar-title>
+        <a href="/" style="text-decoration: none; color: white;">
+          Sample App
+        </a>
+      </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <v-menu offset-y>
@@ -81,7 +85,6 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { firebase } from '@/plugins/firebase'
 
 interface Data {
   drawer: boolean
@@ -100,23 +103,6 @@ export default Vue.extend({
         },
       ],
     }
-  },
-  created() {
-    const messaging = firebase.messaging()
-    messaging
-      .requestPermission()
-      .then(() => {
-        return messaging.getToken()
-      })
-      .then((token) => {
-        console.log(token)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-    messaging.onMessage((payload) => {
-      console.log('message: ', payload)
-    })
   },
 })
 </script>

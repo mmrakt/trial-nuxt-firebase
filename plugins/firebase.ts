@@ -23,6 +23,7 @@ const loginUser = firebase.auth().currentUser
 const userRef = db.collection('users')
 const postRef = db.collection('posts')
 const likeRef = db.collection('likes')
+const relationRef = db.collection('relations')
 const googleProvider = new firebase.auth.GoogleAuthProvider()
 const fbStorage = firebase.storage()
 
@@ -33,6 +34,7 @@ export {
   postRef,
   userRef,
   likeRef,
+  relationRef,
   googleProvider,
   fbStorage,
 }

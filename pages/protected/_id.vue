@@ -46,14 +46,50 @@
             </v-col>
           </v-row>
           <v-card-text>
-            <strong>100</strong>
+            <strong>{{ followingCount }}</strong>
             follow
             <span class="ml-2"></span>
-            <strong>100</strong>
+            <strong>{{ followerCount }}</strong>
             follower
+            <template v-if="!isMypage">
+              <v-btn
+                v-if="isFollowing(user.uid)"
+                rounded
+                color="primary"
+                class="float-right"
+                style="text-transform: none;"
+                @click="unfollow(user.uid)"
+              >
+                following
+              </v-btn>
+              <v-btn
+                v-else
+                rounded
+                class="float-right"
+                style="text-transform: none;"
+                @click="follow(user.uid)"
+              >
+                follow
+              </v-btn>
+            </template>
           </v-card-text>
           <hr />
-          <post-list />
+          <v-tabs fixed-tabs>
+            <v-tab style="text-transform: none;" @click="isActive = 1">
+              Timeline
+            </v-tab>
+            <v-tab style="text-transform: none;" @click="isActive = 2">
+              Follower
+            </v-tab>
+            <v-tab style="text-transform: none;" @click="isActive = 3">
+              Following
+            </v-tab>
+          </v-tabs>
+          <post-list v-if="isActive === 1" />
+          <relation-list
+            v-if="(isActive === 2) | (isActive === 3)"
+            :status="isActive"
+          />
         </v-card>
       </v-container>
     </v-main>
@@ -64,36 +100,58 @@
 import Vue from 'vue'
 import editUserModal from '@/components/editUserModal.vue'
 import postList from '@/components/postList.vue'
+import relationList from '@/components/relationList.vue'
 import cropImageModal from '@/components/cropImageModal.vue'
 import { firebase } from '@/plugins/firebase'
 
 interface Data {
+  paramsId: string
   dialog: boolean
   avatarDialog: boolean
   user: object
+  isActive: number
 }
+
 export default Vue.extend({
   layout: 'protected',
   components: {
     editUserModal,
     postList,
+    relationList,
     cropImageModal,
   },
   data(): Data {
     return {
+      paramsId: this.$route.params.id,
       dialog: false,
       avatarDialog: false,
       user: {},
+      isActive: 1,
     }
   },
   computed: {
     isMypage(): boolean {
-      return this.$route.params.id === this.$store.getters['user/getUid']
+      return this.paramsId === this.$store.getters['user/getUid']
+    },
+    isFollowing() {
+      return function (this: any, uid) {
+        return this.$store.getters['user/getSelfFollowing'].some(function (
+          value
+        ) {
+          return uid === value.followerId
+        })
+      }
+    },
+    followingCount(this: any) {
+      return this.$store.getters['user/getFollowingCount'](this.paramsId)
+    },
+    followerCount(this: any) {
+      return this.$store.getters['user/getFollowerCount'](this.paramsId)
     },
   },
   created(): void {
     this.$store.dispatch('post/postsBind')
-    this.user = this.$store.getters['user/getUser'](this.$route.params.id)
+    this.user = this.$store.getters['user/getUser'](this.paramsId)
   },
   methods: {
     updateProfile(): void {
@@ -110,6 +168,14 @@ export default Vue.extend({
         .then((res) => {
           console.log(res)
         })
+    },
+    follow(uid: string): void {
+      this.$store.dispatch('user/setFollow', uid)
+      this.$store.dispatch('user/relationBind')
+    },
+    unfollow(uid: string): void {
+      this.$store.dispatch('user/setUnfollow', uid)
+      this.$store.dispatch('user/relationBind')
     },
   },
 })

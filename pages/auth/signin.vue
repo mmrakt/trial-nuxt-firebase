@@ -112,6 +112,9 @@ export default Vue.extend({
     }
   },
   middleware: ['handle-login-route'],
+  created() {
+    this.$store.dispatch('user/usersBind')
+  },
   methods: {
     ...mapActions('user', ['login', 'logout']),
     fbEmailLogin(): void {

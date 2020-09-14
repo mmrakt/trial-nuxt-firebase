@@ -43,9 +43,9 @@
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-spacer></v-spacer>
       <v-toolbar-title>
-        <a href="/protected" style="text-decoration: none; color: white;">
+        <nuxt-link to="/protected" style="text-decoration: none; color: white;">
           Sample App
-        </a>
+        </nuxt-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>

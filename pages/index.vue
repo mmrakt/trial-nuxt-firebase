@@ -17,7 +17,7 @@ export default Vue.extend({
   },
   created(): void {
     this.$store.dispatch('post/postsBind')
-    this.$store.dispatch('user/usersBind')
+    // this.$store.dispatch('user/usersBind')
   },
 })
 </script>

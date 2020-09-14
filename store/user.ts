@@ -1,10 +1,12 @@
 import Cookies from 'js-cookie'
 import { firestoreAction } from 'vuexfire'
-import { firebase, fbStorage, userRef } from '../plugins/firebase'
+import { firebase, fbStorage, userRef, relationRef } from '../plugins/firebase'
 
 export const state = () => ({
   uid: null,
   user: null,
+  users: [],
+  relations: [],
 })
 
 export const mutations = {
@@ -25,6 +27,9 @@ export const actions = {
   }),
   loginUserUnbind: firestoreAction(({ unbindFirestoreRef }, uid) => {
     unbindFirestoreRef('user')
+  }),
+  relationBind: firestoreAction(({ bindFirestoreRef }) => {
+    bindFirestoreRef('relations', relationRef)
   }),
   async login({ state, context, commit, dispatch }) {
     const loginUser = await firebase.auth().currentUser!
@@ -94,6 +99,17 @@ export const actions = {
     )
     dispatch('loginUserBind', state.uid)
   },
+  setFollow: firestoreAction((context: any, uid) => {
+    const followingId = context.rootState.user.uid
+    relationRef.doc(uid + followingId).set({
+      followerId: uid,
+      followingId,
+    })
+  }),
+  setUnfollow: firestoreAction((context: any, uid) => {
+    const unfollowingId = context.rootState.user.uid
+    relationRef.doc(uid + unfollowingId).delete()
+  }),
 }
 /* eslint-enable */
 export const getters = {
@@ -115,5 +131,24 @@ export const getters = {
   },
   isAuthenticated(state) {
     return !!state.user && !!state.uid
+  },
+  getSelfFollowing(state, getters) {
+    return state.relations.filter(
+      (relation) => relation.followingId === getters.getUid
+    )
+  },
+  getFollowing: (state) => (uid) => {
+    return state.relations.filter((relation) => relation.followingId === uid)
+  },
+  getFollower: (state) => (uid) => {
+    return state.relations.filter((relation) => relation.followerId === uid)
+  },
+  // eslint-disable-next-line
+  getFollowingCount: (state, getters) => (uid) => {
+    return getters.getFollowing(uid).length
+  },
+  // eslint-disable-next-line
+  getFollowerCount: (state, getters) => (uid) => {
+    return getters.getFollower(uid).length
   },
 }
