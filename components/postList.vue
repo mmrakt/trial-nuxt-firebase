@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card width="600px" class="mx-auto my-3">
+    <v-card width="600px" class="mx-auto">
       <v-card-title class="blue lighten-2">Time line</v-card-title>
       <ul v-for="(post, index) in posts" :key="index" class="pl-0">
         <v-row no-gutters class="px-1 pt-5">

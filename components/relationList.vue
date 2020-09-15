@@ -7,25 +7,24 @@
       <v-card-title v-else class="blue lighten-2">Following</v-card-title>
       <ul v-for="(relation, index) in relationList" :key="index" class="pl-0">
         <v-row no-gutters>
-          <v-col v-if="user(relationId(relation))" cols="2">
-            <template v-if="user(relationId(relation)).avatar">
-              <nuxt-link
-                :to="{
-                  name: 'protected-id',
-                  params: { id: relationId(relation) },
-                }"
-                style="text-decoration: none; color: black;"
-              >
-                <v-avatar color="grey" size="50">
-                  <img :src="user(relationId(relation)).avatar" alt />
-                </v-avatar>
-              </nuxt-link>
-            </template>
-            <template v-else>
-              <v-avatar size="50">
-                <img src="/avatar.png" alt />
+          <v-col cols="2">
+            <nuxt-link
+              v-if="user(relationId(relation))"
+              :to="{
+                name: 'protected-id',
+                params: { id: relationId(relation) },
+              }"
+              style="text-decoration: none; color: black;"
+            >
+              <v-avatar color="grey" size="50">
+                <img
+                  v-if="user(relationId(relation)).avatar"
+                  :src="user(relationId(relation)).avatar"
+                  alt
+                />
+                <img v-else src="/avatar.png" alt />
               </v-avatar>
-            </template>
+            </nuxt-link>
           </v-col>
           <v-col cols="10">
             <v-row>
