@@ -30,6 +30,7 @@
     "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/onesignal": "^3.0.0-beta.16",
     "@nuxtjs/pwa": "^3.0.2",
+    "@vue/composition-api": "^1.0.0-beta.14",
     "cookieparser": "^0.1.0",
     "firebase": "^7.16.1",
     "firebaseui": "^4.6.0",

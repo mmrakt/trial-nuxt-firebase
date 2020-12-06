@@ -52,6 +52,7 @@ export default {
     '~/plugins/firebase',
     '~/plugins/moment-filter',
     '~/plugins/vee-validate',
+    '~/plugins/composition-api',
     {
       src: '~/plugins/localStorage.ts',
       mode: 'client',

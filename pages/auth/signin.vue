@@ -10,21 +10,25 @@
             <v-card>
               <v-card-text>
                 <v-form @submit.prevent="submit">
-                  <p v-if="errMsg" style="color: red;">{{ errMsg }}</p>
+                  <p v-if="state.errMsg" style="color: red;">
+                    {{ state.errMsg }}
+                  </p>
                   <v-text-field
-                    v-model="email"
+                    v-model="state.email"
                     name="email"
                     label="email"
                     prepend-icon="mdi-email"
                   ></v-text-field>
                   <v-text-field
-                    v-model="password"
+                    v-model="state.password"
                     name="password"
                     label="password"
-                    :type="showPassword ? 'text' : 'password'"
+                    :type="state.showPassword ? 'text' : 'password'"
                     prepend-icon="mdi-lock"
-                    :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                    @click:append="showPassword = !showPassword"
+                    :append-icon="
+                      state.showPassword ? 'mdi-eye' : 'mdi-eye-off'
+                    "
+                    @click:append="state.showPassword = !state.showPassword"
                   ></v-text-field>
                 </v-form>
               </v-card-text>
@@ -92,52 +96,57 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { mapActions } from 'vuex'
+import { defineComponent, reactive } from '@vue/composition-api'
 import { firebase, googleProvider } from '@/plugins/firebase'
 
-interface Data {
-  email: string
-  password: string
-  showPassword: boolean
-  errMsg: string
-}
-export default Vue.extend({
-  data(): Data {
-    return {
+export default defineComponent({
+  setup(_props, context: any) {
+    const state = reactive({
       email: '',
       password: '',
       showPassword: false,
       errMsg: '',
-    }
-  },
-  middleware: ['handle-login-route'],
-  created() {
-    this.$store.dispatch('user/usersBind')
-  },
-  methods: {
-    ...mapActions('user', ['login', 'logout']),
-    fbEmailLogin(): void {
+    })
+    // const middleware = {
+    //   middleware: ['handle-login-route'],
+    // }
+    context.root.$store.dispatch('user/usersBind')
+
+    function fbEmailLogin() {
       firebase
         .auth()
-        .signInWithEmailAndPassword(this.email, this.password)
+        .signInWithEmailAndPassword(context.email, context.password)
         .then(() => {
-          this.login()
-          this.$router.push('/protected')
+          context.login()
+          context.root.$router.push('/protected')
         })
         .catch((error) => {
-          this.errMsg = error.message
+          context.errMsg = error.message
         })
-    },
-    async fbGoogleLogin(): Promise<void> {
+    }
+    const login = function () {
+      context.root.$store.dispatch('user/login')
+    }
+    function logout(context: any) {
+      context.root.$store.dispatch('user/logout')
+    }
+    async function fbGoogleLogin() {
       await firebase.auth().signInWithPopup(googleProvider)
-      await this.login()
-      this.$router.push('/protected')
-    },
-    async fbGoogleLogout(): Promise<void> {
-      await this.logout()
-      this.$router.push('/')
-    },
+      await login()
+      context.root.$router.push('/protected')
+    }
+    async function fbGoogleLogout(context: any): Promise<void> {
+      await context.logout()
+      context.root.$router.push('/')
+    }
+    return {
+      state,
+      login,
+      logout,
+      fbGoogleLogin,
+      fbGoogleLogout,
+      fbEmailLogin,
+    }
   },
 })
 </script>
